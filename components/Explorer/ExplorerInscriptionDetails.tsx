@@ -17,21 +17,31 @@ import {
   initialize,
   writeData,
 } from '@metaplex-foundation/mpl-inscription';
-import { MaybeRpcAccount, TransactionBuilder, generateSigner } from '@metaplex-foundation/umi';
+import { TokenStandard, mintV1 } from '@metaplex-foundation/mpl-token-metadata';
+import {
+  MaybeRpcAccount,
+  TransactionBuilder,
+  generateSigner,
+  isNone,
+  publicKey,
+} from '@metaplex-foundation/umi';
 import { base58 } from '@metaplex-foundation/umi/serializers';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useInscription } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
 
 export function ExplorerInscriptionDetails({
-  inscriptionAccount,
+  inscriptionAccount: account,
 }: {
   inscriptionAccount: MaybeRpcAccount;
 }) {
   const umi = useUmi();
+  const wallet = useWallet();
   const router = useRouter();
-  const inscriptionInfo = useInscription(inscriptionAccount);
+  const inscriptionInfo = useInscription(account);
 
   const [mintAmount, setMintAmount] = useState('0');
 
@@ -40,27 +50,32 @@ export function ExplorerInscriptionDetails({
       return;
     }
 
-    // await mintV1(umi, {
-    //   mint: mintAddress,
-    //   amount: Number(mintAmount),
-    //   tokenOwner: publicKey(wallet.publicKey!.toBase58()),
-    //   tokenStandard: TokenStandard.Fungible,
-    // }).sendAndConfirm(umi);
+    const mintAddress = inscriptionInfo.data.metadata?.mint;
+    if (!mintAddress || isNone(mintAddress)) {
+      return;
+    }
 
-    const newInscriptionAccount = generateSigner(umi);
-    const inscriptionMetadataAccount = await findInscriptionMetadataPda(umi, {
-      inscriptionAccount: newInscriptionAccount.publicKey,
+    await mintV1(umi, {
+      mint: mintAddress.value,
+      amount: Number(mintAmount) * LAMPORTS_PER_SOL,
+      tokenOwner: publicKey(wallet.publicKey!.toBase58()),
+      tokenStandard: TokenStandard.Fungible,
+    }).sendAndConfirm(umi);
+
+    const inscriptionAccount = generateSigner(umi);
+    const inscriptionMetadataAccount = findInscriptionMetadataPda(umi, {
+      inscriptionAccount: inscriptionAccount.publicKey,
     });
 
     const builder = new TransactionBuilder()
       .add(
         initialize(umi, {
-          inscriptionAccount: newInscriptionAccount,
+          inscriptionAccount,
         })
       )
       .add(
         writeData(umi, {
-          inscriptionAccount: newInscriptionAccount.publicKey,
+          inscriptionAccount: inscriptionAccount.publicKey,
           inscriptionMetadataAccount,
           value: Buffer.from(
             JSON.stringify({
@@ -77,7 +92,7 @@ export function ExplorerInscriptionDetails({
 
     const result = await builder.sendAndConfirm(umi, { confirm: { commitment: 'finalized' } });
     console.log('minted! signature:', base58.deserialize(result.signature));
-    router.push(`/explorer/${newInscriptionAccount.publicKey}`);
+    router.push(`/explorer/${inscriptionAccount.publicKey}`);
   }
 
   return (

@@ -4,6 +4,7 @@ import {
   findInscriptionMetadataPda,
   findMintInscriptionPda,
   initializeFromMint,
+  setMint,
   writeData,
 } from '@metaplex-foundation/mpl-inscription';
 import { createFungible } from '@metaplex-foundation/mpl-token-metadata';
@@ -43,6 +44,13 @@ export function DeployDpl20() {
     const builder = new TransactionBuilder()
       .add(
         initializeFromMint(umi, {
+          mintAccount: mint.publicKey,
+        })
+      )
+      .add(
+        setMint(umi, {
+          mintInscriptionAccount: inscriptionAccount[0],
+          inscriptionMetadataAccount,
           mintAccount: mint.publicKey,
         })
       )
