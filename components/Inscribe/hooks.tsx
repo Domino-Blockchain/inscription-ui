@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useUmi } from '@/providers/useUmi';
 import { InscriptionInfo } from './types';
 import { useEnv } from '@/providers/useEnv';
+import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 
 export async function accountExists(umi: Umi, account: PublicKey) {
   const maybeAccount = await umi.rpc.getAccount(account);
@@ -20,11 +21,11 @@ export async function accountExists(umi: Umi, account: PublicKey) {
   return false;
 }
 
-export const useNftJson = (nft: DasApiAsset) =>
+export const useNftJson = (nft: DigitalAsset) =>
   useQuery({
-    queryKey: ['fetch-nft-json', nft.id],
+    queryKey: ['fetch-nft-json', nft.publicKey],
     queryFn: async () => {
-      const j = await (await fetch(nft.content.json_uri)).json();
+      const j = await (await fetch(nft.metadata.uri)).json();
       return j;
     },
   });
@@ -215,8 +216,8 @@ export const useUriBlob = (uri: string) =>
     },
   });
 
-export const useNftJsonWithImage = (nft: DasApiAsset) => {
-  const { isPending: jsonPending, data: json } = useNftJson(nft);
+export const useNftJsonWithImage = (asset: DigitalAsset) => {
+  const { isPending: jsonPending, data: json } = useNftJson(asset);
   const { isPending: imagePending, data: blob } = useUriBlob(json?.image);
 
   return { isPending: jsonPending || imagePending, json, image: blob };

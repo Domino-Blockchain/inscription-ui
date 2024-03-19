@@ -9,7 +9,15 @@ import { Env } from '@/providers/useEnv';
 import { useInscriptionCounter } from '@/providers/useInscriptionCounter';
 import RetainQueryLink from '../RetainQueryLink';
 
-const HeaderLink = ({ label, link, disabled }: { label: string, link: string, disabled?: boolean }) => {
+const HeaderLink = ({
+  label,
+  link,
+  disabled,
+}: {
+  label: string;
+  link: string;
+  disabled?: boolean;
+}) => {
   const cls = disabled ? [classes.disabled, classes.link].join(' ') : classes.link;
   return (
     <RetainQueryLink href={link} className={cls}>
@@ -23,23 +31,22 @@ export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => voi
   const { count } = useInscriptionCounter();
 
   return (
-    <Container
-      size="xl"
-      h={80}
-      pt={12}
-    >
+    <Container size="xl" h={80} pt={12}>
       <div className={classes.inner}>
         <Flex justify="center" align="center" gap="md">
           <RetainQueryLink href="/">
             <MetaplexLogo variant={MetaplexLogoVariant.Small} />
           </RetainQueryLink>
           <Title order={2}>Inscriptions</Title>
-          {pathname !== '/' &&
+          {pathname !== '/' && (
             <Title c="red" fw={900} order={3}>
               <NumberFormatter prefix="# " value={count} thousandSeparator />
-            </Title>}
+            </Title>
+          )}
         </Flex>
         <Group>
+          <HeaderLink label="Create NFT" link="/create-nft" />
+          <HeaderLink label="Deploy DPL-20" link="/deploy-dpl20" />
           <HeaderLink label="Inscribe" link="/inscribe" />
           <HeaderLink label="Explorer" link="/explorer" />
           <HeaderLink label="Manage" link="/manage" />

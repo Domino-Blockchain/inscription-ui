@@ -1,9 +1,14 @@
 import { Badge, Box, Card, Group, Image, Skeleton, Text } from '@mantine/core';
-import { DasApiAsset } from '@metaplex-foundation/digital-asset-standard-api';
-import { useNftJson } from './hooks';
+import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
+import { useNftJson } from '@/components/Inscribe/hooks';
 
-export function NftCollectionCard({ nfts, numSelected }: { nfts: DasApiAsset[], numSelected: number }) {
-  // TODO fetch collection NFT
+export function NftCollectionCard({
+  nfts,
+  numSelected,
+}: {
+  nfts: DigitalAsset[];
+  numSelected: number;
+}) {
   const { error, isPending, data: json } = useNftJson(nfts[0]);
 
   return (
@@ -11,16 +16,12 @@ export function NftCollectionCard({ nfts, numSelected }: { nfts: DasApiAsset[], 
       <Card shadow="sm" padding="lg" radius="md">
         <Card.Section>
           <Skeleton visible={!!error}>
-            <Image
-              src={json?.image}
-              height={160}
-            />
+            <Image src={json?.image} height={160} />
           </Skeleton>
         </Card.Section>
         <Group justify="space-between" mt="md">
-          <Text fw={500}>{nfts[0].content.metadata.name}</Text>
+          <Text fw={500}>{nfts[0].metadata.name}</Text>
         </Group>
-
       </Card>
       <Badge
         variant="default"
@@ -28,9 +29,9 @@ export function NftCollectionCard({ nfts, numSelected }: { nfts: DasApiAsset[], 
           position: 'absolute',
           top: '0.5rem',
           right: '0.5rem',
-
         }}
-      >{numSelected}/{nfts.length}
+      >
+        {numSelected}/{nfts.length}
       </Badge>
       <Box
         pos="absolute"
@@ -41,7 +42,7 @@ export function NftCollectionCard({ nfts, numSelected }: { nfts: DasApiAsset[], 
           height: '100%',
           borderRadius: 'inherit',
           border: numSelected > 0 ? '3px solid #21c297' : 'none',
-      }}
+        }}
       />
     </Skeleton>
   );

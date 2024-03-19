@@ -1,5 +1,13 @@
 import { allocate, writeData } from '@metaplex-foundation/mpl-inscription';
-import { Pda, PublicKey, Transaction, TransactionBuilder, TransactionBuilderGroup, Umi, signAllTransactions } from '@metaplex-foundation/umi';
+import {
+  Pda,
+  PublicKey,
+  Transaction,
+  TransactionBuilder,
+  TransactionBuilderGroup,
+  Umi,
+  signAllTransactions,
+} from '@metaplex-foundation/umi';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import pMap from 'p-map';
 
@@ -45,12 +53,12 @@ export async function sendTxsWithRetries({
           console.log('signature', sig);
 
           const confirmRes = await umi.rpc.confirmTransaction(res, {
-              commitment,
-              strategy: {
-                type: 'blockhash',
-                ...blockhash,
-              },
-            });
+            commitment,
+            strategy: {
+              type: 'blockhash',
+              ...blockhash,
+            },
+          });
           if (confirmRes.value?.err) {
             throw new Error('Transaction failed');
           }
@@ -140,7 +148,7 @@ export function buildAllocate({
   const currentSize = opts.currentSize || 0;
 
   if (currentSize < targetSize) {
-    // we need to call allocate multiple times because Solana accounts can only be allocated at most 10k at a time
+    // we need to call allocate multiple times because Domichain accounts can only be allocated at most 10k at a time
     const numAllocates = Math.ceil((targetSize - currentSize) / MAX_PERMITTED_DATA_INCREASE);
 
     for (let j = 0; j < numAllocates; j += 1) {
@@ -172,17 +180,16 @@ export interface PrepareAndSignTxsOptions {
   builder: TransactionBuilder;
 }
 
-export async function prepareAndSignTxs({
-  umi,
-  builder,
-}: PrepareAndSignTxsOptions) {
+export async function prepareAndSignTxs({ umi, builder }: PrepareAndSignTxsOptions) {
   const split = builder.unsafeSplitByTransactionSize(umi);
   const txs = (await new TransactionBuilderGroup(split).setLatestBlockhash(umi)).build(umi);
 
-  const signedTxs = await signAllTransactions(txs.map((tx) => ({
-    transaction: tx,
-    signers: [umi.identity],
-  })));
+  const signedTxs = await signAllTransactions(
+    txs.map((tx) => ({
+      transaction: tx,
+      signers: [umi.identity],
+    }))
+  );
 
   return signedTxs;
 }

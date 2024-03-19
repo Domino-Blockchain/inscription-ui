@@ -14,7 +14,7 @@ import { Providers } from '@/providers/Providers';
 
 export const metadata = {
   title: 'Metaplex Inscription UI',
-  description: 'Mint and manage inscriptions on the Solana blockchain.',
+  description: 'Mint and manage inscriptions on the Domichain blockchain.',
 };
 
 export default function RootLayout({ children }: { children: any }) {

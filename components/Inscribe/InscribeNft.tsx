@@ -51,7 +51,7 @@ export function InscribeNft() {
           allowStepSelect={shouldAllowSelectStep(1)}
         >
           <ConfigureInscribe
-            selectedNfts={selectedNfts}
+            selectedNfts={selectedNfts.map((x) => x.asset)}
             onConfigure={(settings) => {
               setInscriptionSettings(settings);
               handleStepChange(active + 1);
@@ -76,9 +76,6 @@ export function InscribeNft() {
           <Paper mt="lg" p="lg">
             <Center>
               <Stack align="center">
-                <Box w="50%" mt="xl">
-                  <IconChisel size="xl" color="var(--mantine-color-blue-7)" />
-                </Box>
                 <Title>Congratulations! You have inscribed your NFTs.</Title>
                 <Grid my="lg" w="100%" justify="center" gutter="lg">
                   {selectedNfts.map((nft) => (
