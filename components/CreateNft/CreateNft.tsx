@@ -9,10 +9,11 @@ import {
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUmi } from '@/providers/useUmi';
 
 export function CreateNft() {
-  // const router = useRouter();
+  const router = useRouter();
   const umi: any = useUmi();
 
   const [name, setName] = useState('TestNFT');
@@ -48,7 +49,7 @@ export function CreateNft() {
       }).sendAndConfirm(umi);
 
       console.log('create done! signature: ', base58.deserialize(result.signature));
-      // router.push(`/explorer/${inscriptionAccount[0]}`);
+      router.push(`/explorer/${mint.publicKey}`);
     },
     onSuccess: () =>
       notifications.show({

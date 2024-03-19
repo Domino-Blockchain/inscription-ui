@@ -103,7 +103,7 @@ export const useInscription = (account: MaybeRpcAccount) => {
 };
 
 export const useNftInscription = (
-  nft: DasApiAsset,
+  nft: DigitalAsset,
   options: {
     fetchImage?: boolean;
     fetchMetadata?: boolean;
@@ -115,9 +115,9 @@ export const useNftInscription = (
 
   return useQuery({
     // refetchOnMount: true,
-    queryKey: ['fetch-nft-inscription', env, nft.id],
+    queryKey: ['fetch-nft-inscription', env, nft.publicKey],
     queryFn: async () => {
-      const inscriptionPda = findMintInscriptionPda(umi, { mint: nft.id });
+      const inscriptionPda = findMintInscriptionPda(umi, { mint: nft.mint.publicKey });
       const inscriptionMetadataAccount = findInscriptionMetadataPda(umi, {
         inscriptionAccount: inscriptionPda[0],
       });

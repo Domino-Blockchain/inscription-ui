@@ -11,7 +11,7 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
       <Text fz="md" tt="uppercase" fw={700} c="dimmed">
         NFT Details
       </Text>
-      {jsonInfo.isPending ? (
+      {jsonInfo.isPending || jsonInfo.isError ? (
         <Center h="20vh">
           <Loader />
         </Center>

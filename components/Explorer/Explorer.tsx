@@ -7,12 +7,14 @@ import { ExplorerInscriptionDetails } from './ExplorerInscriptionDetails';
 export function Explorer({ nft }: { nft: DigitalAsset }) {
   return (
     <SimpleGrid cols={2} mt="xl" spacing="lg" pb="xl">
+      {nft.metadata.uri && (
+        <Paper p="xl" radius="md">
+          <ExplorerNftDetails nft={nft} />
+        </Paper>
+      )}
       <Paper p="xl" radius="md">
-        <ExplorerNftDetails nft={nft} />
+        <ExplorerInscriptionDetails nft={nft} />
       </Paper>
-      {/* <Paper p="xl" radius="md">
-        <ExplorerInscriptionDetails asset={asset} />
-      </Paper> */}
     </SimpleGrid>
   );
 }

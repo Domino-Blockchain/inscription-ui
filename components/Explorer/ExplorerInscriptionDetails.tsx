@@ -1,4 +1,3 @@
-import { useUmi } from '@/providers/useUmi';
 import { CodeHighlightTabs } from '@mantine/code-highlight';
 import {
   Badge,
@@ -17,31 +16,26 @@ import {
   initialize,
   writeData,
 } from '@metaplex-foundation/mpl-inscription';
-import { TokenStandard, mintV1 } from '@metaplex-foundation/mpl-token-metadata';
-import {
-  MaybeRpcAccount,
-  TransactionBuilder,
-  generateSigner,
-  isNone,
-  publicKey,
-} from '@metaplex-foundation/umi';
+import { DigitalAsset, TokenStandard, mintV1 } from '@metaplex-foundation/mpl-token-metadata';
+import { TransactionBuilder, generateSigner, isNone, publicKey } from '@metaplex-foundation/umi';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useInscription } from '../Inscribe/hooks';
+import { useUmi } from '@/providers/useUmi';
+import { useNftInscription } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
 
-export function ExplorerInscriptionDetails({
-  inscriptionAccount: account,
-}: {
-  inscriptionAccount: MaybeRpcAccount;
-}) {
+export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
   const umi = useUmi();
   const wallet = useWallet();
   const router = useRouter();
-  const inscriptionInfo = useInscription(account);
+  const inscriptionInfo = useNftInscription(nft, {
+    fetchImage: true,
+    fetchMetadata: true,
+    fetchJson: true,
+  });
 
   const [mintAmount, setMintAmount] = useState('0');
 
