@@ -1,17 +1,15 @@
-import { DasApiAsset } from '@metaplex-foundation/digital-asset-standard-api';
 import {
-  fetchInscriptionMetadataFromSeeds,
   findAssociatedInscriptionAccountPda,
   findInscriptionMetadataPda,
   findMintInscriptionPda,
   safeFetchInscriptionMetadata,
 } from '@metaplex-foundation/mpl-inscription';
-import { MaybeRpcAccount, PublicKey, Umi } from '@metaplex-foundation/umi';
+import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
+import { PublicKey, Umi } from '@metaplex-foundation/umi';
 import { useQuery } from '@tanstack/react-query';
+import { useEnv } from '@/providers/useEnv';
 import { useUmi } from '@/providers/useUmi';
 import { InscriptionInfo } from './types';
-import { useEnv } from '@/providers/useEnv';
-import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 
 export async function accountExists(umi: Umi, account: PublicKey) {
   const maybeAccount = await umi.rpc.getAccount(account);
@@ -29,78 +27,6 @@ export const useNftJson = (nft: DigitalAsset) =>
       return j;
     },
   });
-
-export const useInscription = (account: MaybeRpcAccount) => {
-  const umi = useUmi();
-  const env = useEnv();
-
-  return useQuery({
-    // refetchOnMount: true,
-    queryKey: ['fetch-inscription', env, account.publicKey],
-    queryFn: async () => {
-      const inscriptionMetadataAccount = findInscriptionMetadataPda(umi, {
-        inscriptionAccount: account.publicKey,
-      });
-      const imagePda = findAssociatedInscriptionAccountPda(umi, {
-        associationTag: 'image',
-        inscriptionMetadataAccount: inscriptionMetadataAccount[0],
-      });
-
-      let metadata;
-      let metadataPdaExists: boolean;
-
-      try {
-        metadata = await safeFetchInscriptionMetadata(umi, inscriptionMetadataAccount[0]);
-        metadataPdaExists = !!metadata;
-      } catch (e) {
-        console.log('Error fetching inscription metadata', e);
-        metadataPdaExists = false;
-      }
-
-      let json;
-      let jsonValid = false;
-
-      if (account.exists) {
-        try {
-          json = JSON.parse(Buffer.from(account.data).toString('utf8'));
-          jsonValid = true;
-        } catch (e) {
-          console.log('Error parsing inscription metadata', e);
-        }
-
-        if (!json) {
-          try {
-            json = JSON.parse(Buffer.from(account.data).toString('ascii'));
-            jsonValid = true;
-          } catch (e) {
-            console.log('Error parsing inscription metadata 2', e);
-          }
-        }
-
-        if (!json) {
-          try {
-            json = Buffer.from(account.data).toString('utf8');
-          } catch (e) {
-            console.log('Error parsing inscription metadata 3', e);
-          }
-        }
-      }
-
-      return {
-        inscriptionPda: [account.publicKey, 64] as any,
-        inscriptionMetadataAccount,
-        imagePda,
-        pdaExists: account.exists,
-        metadataPdaExists,
-        imagePdaExists: false,
-        image: undefined,
-        metadata,
-        json,
-        jsonValid,
-      } as InscriptionInfo;
-    },
-  });
-};
 
 export const useNftInscription = (
   nft: DigitalAsset,

@@ -1,4 +1,5 @@
-import { Box, Button, Input, Text } from '@mantine/core';
+import { useUmi } from '@/providers/useUmi';
+import { Button, FileInput, Group, Input, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { createNft } from '@metaplex-foundation/mpl-token-metadata';
 import {
@@ -8,34 +9,34 @@ import {
 } from '@metaplex-foundation/umi';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import { useMutation } from '@tanstack/react-query';
-import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUmi } from '@/providers/useUmi';
+import { useState } from 'react';
 
 export function CreateNft() {
+  const umi = useUmi();
   const router = useRouter();
-  const umi: any = useUmi();
 
   const [name, setName] = useState('TestNFT');
   const [description, setDescription] = useState('This is a test NFT');
   const [symbol, setSymbol] = useState('TEST');
-  const [imageUri, setImageUri] = useState('');
-
-  async function uploadFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = await createGenericFileFromBrowserFile(event.target.files![0]);
-    const [fileUri] = await umi.uploader.upload([file]);
-    setImageUri(fileUri);
-  }
+  const [file, setFile] = useState<File | null>(null);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
+      if (!file) {
+        return null;
+      }
+
       const mint = generateSigner(umi);
       console.log('mint address: ', mint.publicKey);
+
+      const genericFile = await createGenericFileFromBrowserFile(file);
+      const [fileUri] = await umi.uploader.upload([genericFile]);
 
       const uri = await umi.uploader.uploadJson({
         name,
         description,
-        image: imageUri,
+        image: fileUri,
       });
 
       const result = await createNft(umi, {
@@ -60,27 +61,25 @@ export function CreateNft() {
   });
 
   return (
-    <Box mt="xl">
-      <Text size="sm" my="sm">
-        Name
-      </Text>
-      <Input value={name} onChange={(event) => setName(event.currentTarget.value)} />
-      <Text size="sm" my="sm">
-        Description
-      </Text>
-      <Input value={description} onChange={(event) => setDescription(event.currentTarget.value)} />
-      <Text size="sm" my="sm">
-        Symbol
-      </Text>
-      <Input value={symbol} onChange={(event) => setSymbol(event.currentTarget.value)} />
-      <Text size="sm" my="sm">
-        Image
-      </Text>
-      <Input type="file" onChange={uploadFile} />
-      <Text>{imageUri}</Text>
-      <Button my="lg" onClick={() => mutate()} loading={isPending}>
-        Create NFT
-      </Button>
-    </Box>
+    <Stack my="lg" gap="sm">
+      <Input.Wrapper label="Name" required>
+        <Input value={name} onChange={(event) => setName(event.currentTarget.value)} />
+      </Input.Wrapper>
+      <Input.Wrapper label="Description">
+        <Input
+          value={description}
+          onChange={(event) => setDescription(event.currentTarget.value)}
+        />
+      </Input.Wrapper>
+      <Input.Wrapper label="Symbol" required>
+        <Input value={symbol} onChange={(event) => setSymbol(event.currentTarget.value)} />
+      </Input.Wrapper>
+      <FileInput label="Image File" required type="button" onChange={setFile} />
+      <Group justify="flex-end" mt="md">
+        <Button onClick={mutate as never} loading={isPending}>
+          Create NFT
+        </Button>
+      </Group>
+    </Stack>
   );
 }

@@ -1,13 +1,11 @@
-import { Center, Container, Flex, Group, Menu, NumberFormatter, Title } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons-react';
+import { Center, Container, Flex, Group, Menu, Title } from '@mantine/core';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { IconChevronDown } from '@tabler/icons-react';
 
-import { usePathname } from 'next/navigation';
-import classes from './Header.module.css';
-import { MetaplexLogo, MetaplexLogoVariant } from '../MetaplexLogo';
 import { Env } from '@/providers/useEnv';
-import { useInscriptionCounter } from '@/providers/useInscriptionCounter';
+import { MetaplexLogo, MetaplexLogoVariant } from '../MetaplexLogo';
 import RetainQueryLink from '../RetainQueryLink';
+import classes from './Header.module.css';
 
 const HeaderLink = ({
   label,
@@ -27,8 +25,8 @@ const HeaderLink = ({
 };
 
 export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => void }) {
-  const pathname = usePathname();
-  const { count } = useInscriptionCounter();
+  // const pathname = usePathname();
+  // const { count } = useInscriptionCounter();
 
   return (
     <Container size="xl" h={80} pt={12}>
@@ -38,11 +36,11 @@ export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => voi
             <MetaplexLogo variant={MetaplexLogoVariant.Small} />
           </RetainQueryLink>
           <Title order={2}>Inscriptions</Title>
-          {pathname !== '/' && (
+          {/* {pathname !== '/' && (
             <Title c="red" fw={900} order={3}>
               <NumberFormatter prefix="# " value={count} thousandSeparator />
             </Title>
-          )}
+          )} */}
         </Flex>
         <Group>
           <HeaderLink label="Create NFT" link="/create-nft" />

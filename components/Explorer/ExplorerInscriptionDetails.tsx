@@ -26,6 +26,7 @@ import { useState } from 'react';
 import { useUmi } from '@/providers/useUmi';
 import { useNftInscription } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
+import RetainQueryLink from '@/components/RetainQueryLink';
 
 export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
   const umi = useUmi();
@@ -100,7 +101,12 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
         </Center>
       ) : inscriptionInfo.error || !inscriptionInfo?.data.metadataPdaExists ? (
         <Center h="20vh">
-          <Text>NFT is not inscribed</Text>
+          <Stack align="center">
+            <Text>NFT is not inscribed</Text>
+            <RetainQueryLink href="/inscribe">
+              <Button>Inscribe now</Button>
+            </RetainQueryLink>
+          </Stack>
         </Center>
       ) : (
         <>
