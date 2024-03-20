@@ -358,9 +358,6 @@ export function DoInscribe({
                 Total Domichain rent cost:{' '}
                 <b>~{(summary.totalSize * 0.00000696).toFixed(4)} DOMI</b>
               </Text>
-              <Text>
-                Total Metaplex fees: <b>FREE</b> forever
-              </Text>
               <Center>
                 <Button size="lg" onClick={() => handleInscribe()}>
                   Inscribe!

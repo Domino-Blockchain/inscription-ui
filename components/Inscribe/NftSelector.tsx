@@ -20,7 +20,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 
-import { fetchAllDigitalAssetByUpdateAuthority } from '@metaplex-foundation/mpl-token-metadata';
+import {
+  TokenStandard,
+  fetchAllDigitalAssetByUpdateAuthority,
+} from '@metaplex-foundation/mpl-token-metadata';
+import { unwrapOption } from '@metaplex-foundation/umi';
 import { useUmi } from '@/providers/useUmi';
 import { useEnv } from '@/providers/useEnv';
 import { NftCollectionCard } from './NftCollectionCard';
@@ -61,9 +65,16 @@ export function NftSelector({
     isPending,
     data: nfts,
   } = useQuery({
-    queryKey: ['fetch-nfts', env, umi.identity.publicKey],
+    queryKey: ['fetch-nfts-by-authority', env, umi.identity.publicKey],
     queryFn: async () => {
-      const assets = await fetchAllDigitalAssetByUpdateAuthority(umi, umi.identity.publicKey);
+      const assets = (
+        await fetchAllDigitalAssetByUpdateAuthority(umi, umi.identity.publicKey)
+      ).filter(
+        (asset) =>
+          unwrapOption(asset.metadata.tokenStandard) === TokenStandard.NonFungible &&
+          asset.metadata.uri
+      );
+
       const infos: Pick<
         InscriptionInfo,
         'inscriptionPda' | 'inscriptionMetadataAccount' | 'imagePda'
@@ -299,11 +310,8 @@ export function NftSelector({
             <Paper mt="xl">
               <Center h="20vh">
                 <Text w="50%" ta="center">
-                  Launch your own collection on{' '}
-                  <Anchor href="https://studio.metaplex.com" target="_blank">
-                    Metaplex Creator Studio
-                  </Anchor>
-                  . Return here once your collection has minted NFTs to inscribe them.
+                  Create your own NFT <Anchor href="/create-nft">here</Anchor>. Return here once
+                  your collection has minted NFTs to inscribe them.
                 </Text>
               </Center>
             </Paper>
@@ -342,7 +350,7 @@ export function NftSelector({
                 ?.filter((nft) => (hideInscribed ? !nft.pdaExists : true))
                 .filter((nft) => {
                   if (showOnlyOwned) {
-                    return true;
+                    return true; // TODO: fix this
                     // return nft.ownership.owner === umi.identity.publicKey;
                   }
                   return true;

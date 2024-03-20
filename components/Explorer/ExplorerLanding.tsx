@@ -1,19 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
+import { Box, Center, Loader, SimpleGrid, Text, Title } from '@mantine/core';
 import {
   deserializeInscriptionMetadata,
   findAssociatedInscriptionAccountPda,
   findInscriptionMetadataPda,
   findMintInscriptionPda,
 } from '@metaplex-foundation/mpl-inscription';
-import { Box, Center, Loader, SimpleGrid, Text, Title } from '@mantine/core';
+import { fetchAllDigitalAssetByOwner } from '@metaplex-foundation/mpl-token-metadata';
+import { useQuery } from '@tanstack/react-query';
 import { useUmi } from '@/providers/useUmi';
-import { InscriptionInfo } from '../Inscribe/types';
 import { useEnv } from '@/providers/useEnv';
+import { InscriptionInfo } from '../Inscribe/types';
 import { ExplorerNftCard } from './ExplorerNftCard';
-import {
-  fetchAllDigitalAssetByCreator,
-  fetchAllDigitalAssetByOwner,
-} from '@metaplex-foundation/mpl-token-metadata';
 
 export function ExplorerLanding() {
   const umi = useUmi();
@@ -24,7 +21,7 @@ export function ExplorerLanding() {
     isPending,
     data: nfts,
   } = useQuery({
-    queryKey: ['fetch-nfts', env, umi.identity.publicKey],
+    queryKey: ['fetch-nfts-by-owner', env, umi.identity.publicKey],
     queryFn: async () => {
       const assets = await fetchAllDigitalAssetByOwner(umi, umi.identity.publicKey);
       const infos: Pick<

@@ -74,7 +74,7 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
           inscriptionMetadataAccount,
           value: Buffer.from(
             JSON.stringify({
-              p: 'dpl-20',
+              p: 'brc-20',
               op: 'mint',
               tick: inscriptionInfo.data.json.tick,
               amt: mintAmount,

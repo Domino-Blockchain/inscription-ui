@@ -1,9 +1,8 @@
-import { Center, Container, Flex, Group, Menu, Title } from '@mantine/core';
+import { Center, Container, Flex, Group, Image, Menu, Title } from '@mantine/core';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { IconChevronDown } from '@tabler/icons-react';
 
 import { Env } from '@/providers/useEnv';
-import { MetaplexLogo, MetaplexLogoVariant } from '../MetaplexLogo';
 import RetainQueryLink from '../RetainQueryLink';
 import classes from './Header.module.css';
 
@@ -33,7 +32,7 @@ export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => voi
       <div className={classes.inner}>
         <Flex justify="center" align="center" gap="md">
           <RetainQueryLink href="/">
-            <MetaplexLogo variant={MetaplexLogoVariant.Small} />
+            <Image src="/logo.png" alt="Domichain logo" width={32} height={32} />
           </RetainQueryLink>
           <Title order={2}>Inscriptions</Title>
           {/* {pathname !== '/' && (
@@ -44,7 +43,7 @@ export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => voi
         </Flex>
         <Group>
           <HeaderLink label="Create NFT" link="/create-nft" />
-          <HeaderLink label="Deploy DPL-20" link="/deploy-dpl20" />
+          <HeaderLink label="Deploy BRC-20" link="/deploy-dpl20" />
           <HeaderLink label="Inscribe" link="/inscribe" />
           <HeaderLink label="Explorer" link="/explorer" />
           <HeaderLink label="Manage" link="/manage" />

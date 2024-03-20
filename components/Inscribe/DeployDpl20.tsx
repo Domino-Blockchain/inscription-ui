@@ -63,7 +63,7 @@ export function DeployDpl20() {
             inscriptionMetadataAccount,
             value: Buffer.from(
               JSON.stringify({
-                p: 'dpl-20',
+                p: 'brc-20',
                 op: 'deploy',
                 tick: ticker,
                 max: supply,
@@ -77,12 +77,12 @@ export function DeployDpl20() {
 
       const result = await builder.sendAndConfirm(umi, { confirm: { commitment: 'finalized' } });
       console.log('deploy done! signature: ', base58.deserialize(result.signature));
-      router.push(`/explorer/${inscriptionAccount[0]}`);
+      router.push(`/explorer/${mint.publicKey}`);
     },
     onSuccess: () =>
       notifications.show({
         title: 'Success',
-        message: 'Your DPL-20 token has been deployed',
+        message: 'Your BRC-20 token has been deployed',
         color: 'green',
       }),
   });

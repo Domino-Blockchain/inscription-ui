@@ -13,7 +13,7 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 import { Providers } from '@/providers/Providers';
 
 export const metadata = {
-  title: 'Metaplex Inscription UI',
+  title: 'Domichain Inscription UI',
   description: 'Mint and manage inscriptions on the Domichain blockchain.',
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: any }) {
     <html lang="en">
       <head>
         <ColorSchemeScript />
-        <link rel="shortcut icon" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
