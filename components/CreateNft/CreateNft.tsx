@@ -58,6 +58,7 @@ export function CreateNft() {
         message: 'Your NFT has been created',
         color: 'green',
       }),
+    onError: (error) => console.error(error),
   });
 
   return (

@@ -1,9 +1,12 @@
 import { Button, Group, Input, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
+  createShard,
   findInscriptionMetadataPda,
+  findInscriptionShardPda,
   findMintInscriptionPda,
   initializeFromMint,
+  safeFetchInscriptionShard,
   setMint,
   writeData,
 } from '@metaplex-foundation/mpl-inscription';
@@ -44,10 +47,29 @@ export function DeployDpl20() {
         inscriptionAccount: inscriptionAccount[0],
       });
 
-      const builder = new TransactionBuilder()
+      let builder = new TransactionBuilder();
+
+      const shardNumber = Math.floor(Math.random() * 32);
+      const inscriptionShardAccount = findInscriptionShardPda(umi, {
+        shardNumber,
+      });
+
+      const shardData = await safeFetchInscriptionShard(umi, inscriptionShardAccount);
+      if (!shardData) {
+        builder = builder.add(
+          createShard(umi, {
+            shardAccount,
+            shardNumber,
+          })
+        );
+      }
+
+      builder = builder
         .add(
           initializeFromMint(umi, {
             mintAccount: mint.publicKey,
+            inscriptionShardAccount,
+            shard: shardNumber,
           })
         )
         .add(
@@ -85,6 +107,7 @@ export function DeployDpl20() {
         message: 'Your BRC-20 token has been deployed',
         color: 'green',
       }),
+    onError: (error) => console.error(error),
   });
 
   return (

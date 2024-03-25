@@ -41,25 +41,6 @@ import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 
 const sizeOf = require('browser-image-size');
 
-async function fetchIdempotentInscriptionShard(umi: Umi, number = Math.floor(Math.random() * 32)) {
-  const shardAccount = findInscriptionShardPda(umi, { shardNumber: number });
-
-  // Check if the account has already been created.
-  let shardData = await safeFetchInscriptionShard(umi, shardAccount);
-
-  if (!shardData) {
-    await createShard(umi, {
-      shardAccount,
-      shardNumber: 0,
-    }).sendAndConfirm(umi);
-
-    // Then an account was created with the correct data.
-    shardData = await safeFetchInscriptionShard(umi, shardAccount);
-  }
-
-  return shardAccount;
-}
-
 type Calculated = {
   json: any;
   jsonLength: number;
@@ -209,12 +190,6 @@ export function DoInscribe({
         open();
         setProgress(0);
 
-        // TODO remove this because we don't need it
-        const shardAccounts = await Promise.all(
-          [...Array(32)].map((_, i) => fetchIdempotentInscriptionShard(umi, i))
-        );
-
-        const randomShard = () => shardAccounts[Math.floor(Math.random() * shardAccounts.length)];
         let setupBuilder = new TransactionBuilder();
         let dataBuilder = new TransactionBuilder();
         const imageDatas = (
@@ -223,14 +198,30 @@ export function DoInscribe({
         const enc = new TextEncoder();
 
         // TODO skip the inits if they already exist
-
-        summary.calculated.forEach((c, index) => {
+        /* eslint-disable-next-line */
+        for (const [index, c] of summary.calculated.entries()) {
           console.log('initializing', c.nft.publicKey);
+
+          const shardNumber = Math.floor(Math.random() * 32);
+          const shardAccount = findInscriptionShardPda(umi, { shardNumber });
+
+          // Check if the account has already been created.
+          // eslint-disable-next-line no-await-in-loop
+          const shardData = await safeFetchInscriptionShard(umi, shardAccount);
+
+          if (!shardData) {
+            setupBuilder = setupBuilder.add(
+              createShard(umi, {
+                shardAccount,
+                shardNumber,
+              })
+            );
+          }
 
           setupBuilder = setupBuilder.add(
             initializeFromMint(umi, {
               mintAccount: c.nft.mint.publicKey,
-              inscriptionShardAccount: randomShard(),
+              inscriptionShardAccount: shardAccount,
             })
           );
 
@@ -279,7 +270,7 @@ export function DoInscribe({
             associatedTag: null,
             data: enc.encode(JSON.stringify(c.json)),
           });
-        });
+        }
 
         console.log('data ix length', dataBuilder.getInstructions().length);
 
