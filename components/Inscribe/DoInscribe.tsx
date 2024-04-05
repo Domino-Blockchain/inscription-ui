@@ -208,7 +208,6 @@ export function DoInscribe({
           // Check if the account has already been created.
           // eslint-disable-next-line no-await-in-loop
           const shardData = await safeFetchInscriptionShard(umi, shardAccount);
-
           if (!shardData) {
             setupBuilder = setupBuilder.add(
               createShard(umi, {

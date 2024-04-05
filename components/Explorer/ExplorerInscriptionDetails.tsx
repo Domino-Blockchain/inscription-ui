@@ -12,8 +12,11 @@ import {
   Title,
 } from '@mantine/core';
 import {
+  createShard,
   findInscriptionMetadataPda,
+  findInscriptionShardPda,
   initialize,
+  safeFetchInscriptionShard,
   writeData,
 } from '@metaplex-foundation/mpl-inscription';
 import { DigitalAsset, TokenStandard, mintV1 } from '@metaplex-foundation/mpl-token-metadata';
@@ -62,10 +65,28 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
       inscriptionAccount: inscriptionAccount.publicKey,
     });
 
-    const builder = new TransactionBuilder()
+    let builder = new TransactionBuilder();
+
+    const shardNumber = Math.floor(Math.random() * 32);
+    const inscriptionShardAccount = findInscriptionShardPda(umi, {
+      shardNumber,
+    });
+
+    const shardData = await safeFetchInscriptionShard(umi, inscriptionShardAccount);
+    if (!shardData) {
+      builder = builder.add(
+        createShard(umi, {
+          shardAccount: inscriptionShardAccount,
+          shardNumber,
+        })
+      );
+    }
+
+    builder = builder
       .add(
         initialize(umi, {
           inscriptionAccount,
+          inscriptionShardAccount,
         })
       )
       .add(

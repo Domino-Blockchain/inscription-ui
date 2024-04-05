@@ -58,7 +58,7 @@ export function DeployDpl20() {
       if (!shardData) {
         builder = builder.add(
           createShard(umi, {
-            shardAccount,
+            shardAccount: inscriptionShardAccount,
             shardNumber,
           })
         );
