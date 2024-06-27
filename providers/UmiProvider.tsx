@@ -37,7 +37,7 @@ export const UmiProvider = ({ children }: { children: ReactNode }) => {
       publicKey: publicKey('Dt8fRCpjeV6JDemhPmtcTKijgKdPxXHn9Wo9cXY5agtG'),
     });
 
-    return umi;
+    return _umi;
   }, [wallet, connection]);
 
   return <UmiContext.Provider value={{ umi }}>{children}</UmiContext.Provider>;
