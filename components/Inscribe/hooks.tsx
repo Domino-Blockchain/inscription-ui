@@ -31,6 +31,7 @@ export const useNftJson = (nft: DigitalAsset) =>
 export const useNftInscription = (
   nft: DigitalAsset,
   options: {
+    inscriptionAccount?: PublicKey;
     fetchImage?: boolean;
     fetchMetadata?: boolean;
     fetchJson?: boolean;
@@ -44,8 +45,10 @@ export const useNftInscription = (
     queryKey: ['fetch-nft-inscription', env, nft.publicKey],
     queryFn: async () => {
       const inscriptionPda = findMintInscriptionPda(umi, { mint: nft.mint.publicKey });
+      const inscriptionAccount = options.inscriptionAccount ?? inscriptionPda[0];
+
       const inscriptionMetadataAccount = findInscriptionMetadataPda(umi, {
-        inscriptionAccount: inscriptionPda[0],
+        inscriptionAccount,
       });
       const imagePda = findAssociatedInscriptionAccountPda(umi, {
         associationTag: 'image',
@@ -76,14 +79,14 @@ export const useNftInscription = (
           metadataPdaExists = false;
         }
       } else {
-        metadataPdaExists = await accountExists(umi, inscriptionPda[0]);
+        metadataPdaExists = await accountExists(umi, inscriptionAccount);
       }
 
       let json;
       let pdaExists;
       let jsonValid = false;
       if (options.fetchJson) {
-        const acc = await umi.rpc.getAccount(inscriptionPda[0]);
+        const acc = await umi.rpc.getAccount(inscriptionAccount);
         pdaExists = acc.exists;
         if (acc.exists) {
           try {
@@ -111,7 +114,7 @@ export const useNftInscription = (
           }
         }
       } else {
-        pdaExists = await accountExists(umi, inscriptionPda[0]);
+        pdaExists = await accountExists(umi, inscriptionAccount);
       }
 
       return {

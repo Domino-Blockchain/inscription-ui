@@ -24,8 +24,10 @@ import { TransactionBuilder, generateSigner, isNone, publicKey } from '@metaplex
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
 import { useUmi } from '@/providers/useUmi';
 import { useNftInscription } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
@@ -35,7 +37,12 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
   const umi = useUmi();
   const wallet = useWallet();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const inscriptionAccountParam = searchParams.get('inscription');
+
   const inscriptionInfo = useNftInscription(nft, {
+    inscriptionAccount: inscriptionAccountParam ? publicKey(inscriptionAccountParam) : undefined,
     fetchImage: true,
     fetchMetadata: true,
     fetchJson: true,
@@ -43,73 +50,82 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
 
   const [mintAmount, setMintAmount] = useState('0');
 
-  async function inscribeMint() {
-    if (!inscriptionInfo.data) {
-      return;
-    }
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      if (!inscriptionInfo.data) {
+        return;
+      }
 
-    const mintAddress = inscriptionInfo.data.metadata?.mint;
-    if (!mintAddress || isNone(mintAddress)) {
-      return;
-    }
+      const mintAddress = inscriptionInfo.data.metadata?.mint;
+      if (!mintAddress || isNone(mintAddress)) {
+        return;
+      }
 
-    await mintV1(umi, {
-      mint: mintAddress.value,
-      amount: Number(mintAmount) * LAMPORTS_PER_SOL,
-      tokenOwner: publicKey(wallet.publicKey!.toBase58()),
-      tokenStandard: TokenStandard.Fungible,
-    }).sendAndConfirm(umi);
+      await mintV1(umi, {
+        mint: mintAddress.value,
+        amount: Number(mintAmount) * LAMPORTS_PER_SOL,
+        tokenOwner: publicKey(wallet.publicKey!.toBase58()),
+        tokenStandard: TokenStandard.Fungible,
+      }).sendAndConfirm(umi);
 
-    const inscriptionAccount = generateSigner(umi);
-    const inscriptionMetadataAccount = findInscriptionMetadataPda(umi, {
-      inscriptionAccount: inscriptionAccount.publicKey,
-    });
+      const inscriptionAccount = generateSigner(umi);
+      const inscriptionMetadataAccount = findInscriptionMetadataPda(umi, {
+        inscriptionAccount: inscriptionAccount.publicKey,
+      });
 
-    let builder = new TransactionBuilder();
+      let builder = new TransactionBuilder();
 
-    const shardNumber = Math.floor(Math.random() * 32);
-    const inscriptionShardAccount = findInscriptionShardPda(umi, {
-      shardNumber,
-    });
+      const shardNumber = Math.floor(Math.random() * 32);
+      const inscriptionShardAccount = findInscriptionShardPda(umi, {
+        shardNumber,
+      });
 
-    const shardData = await safeFetchInscriptionShard(umi, inscriptionShardAccount);
-    if (!shardData) {
-      builder = builder.add(
-        createShard(umi, {
-          shardAccount: inscriptionShardAccount,
-          shardNumber,
-        })
-      );
-    }
+      const shardData = await safeFetchInscriptionShard(umi, inscriptionShardAccount);
+      if (!shardData) {
+        builder = builder.add(
+          createShard(umi, {
+            shardAccount: inscriptionShardAccount,
+            shardNumber,
+          })
+        );
+      }
 
-    builder = builder
-      .add(
-        initialize(umi, {
-          inscriptionAccount,
-          inscriptionShardAccount,
-        })
-      )
-      .add(
-        writeData(umi, {
-          inscriptionAccount: inscriptionAccount.publicKey,
-          inscriptionMetadataAccount,
-          value: Buffer.from(
-            JSON.stringify({
-              p: 'brc-20',
-              op: 'mint',
-              tick: inscriptionInfo.data.json.tick,
-              amt: mintAmount,
-            })
-          ),
-          associatedTag: null,
-          offset: 0,
-        })
-      );
+      builder = builder
+        .add(
+          initialize(umi, {
+            inscriptionAccount,
+            inscriptionShardAccount,
+          })
+        )
+        .add(
+          writeData(umi, {
+            inscriptionAccount: inscriptionAccount.publicKey,
+            inscriptionMetadataAccount,
+            value: Buffer.from(
+              JSON.stringify({
+                p: 'brc-20',
+                op: 'mint',
+                tick: inscriptionInfo.data.json.tick,
+                amt: mintAmount,
+              })
+            ),
+            associatedTag: null,
+            offset: 0,
+          })
+        );
 
-    const result = await builder.sendAndConfirm(umi, { confirm: { commitment: 'finalized' } });
-    console.log('minted! signature:', base58.deserialize(result.signature));
-    router.push(`/explorer/${inscriptionAccount.publicKey}`);
-  }
+      const result = await builder.sendAndConfirm(umi, { confirm: { commitment: 'finalized' } });
+      console.log('minted! signature:', base58.deserialize(result.signature));
+      router.push(`/explorer/${mintAddress.value}?inscription=${inscriptionAccount.publicKey}`);
+    },
+    onSuccess: () =>
+      notifications.show({
+        title: 'Success',
+        message: 'BRC-20 has been successfully minted',
+        color: 'green',
+      }),
+    onError: (error) => console.error(error),
+  });
 
   return (
     <Stack>
@@ -191,7 +207,9 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
               onChange={(event) => setMintAmount(event.target.value)}
               placeholder="Mint amount"
             />
-            <Button onClick={inscribeMint}>Mint</Button>
+            <Button onClick={() => mutate()} loading={isPending}>
+              Mint
+            </Button>
           </Group>
         </>
       )}
