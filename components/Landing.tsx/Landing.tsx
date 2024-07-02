@@ -1,7 +1,6 @@
 'use client';
 
-import { Box, Container, Text, Title } from '@mantine/core';
-import { InscriptionCounterHero } from '../InscriptionCounter/inscriptionCounterHero';
+import { Container, Text, Title } from '@mantine/core';
 import classes from './Landing.module.css';
 
 export function Landing() {
@@ -18,11 +17,11 @@ export function Landing() {
           </div>
         </div>
       </Container>
-      <Box bg="rgb(36, 36, 36)" py="xl">
+      {/* <Box bg="rgb(36, 36, 36)" py="xl">
         <Container size="md" py="xl">
           <InscriptionCounterHero />
         </Container>
-      </Box>
+      </Box> */}
     </>
   );
 }

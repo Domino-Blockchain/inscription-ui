@@ -2,15 +2,15 @@
 
 import { Center, Container, Paper, Text } from '@mantine/core';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { InscribeNft } from '@/components/Inscribe/InscribeNft';
+import { DeployDpl20 } from '@/components/Inscribe/DeployDpl20';
 
-export default function InscribePage() {
+export default function DeployPage() {
   const wallet = useWallet();
 
   return (
     <Container size="xl" pb="xl">
       {wallet.connected ? (
-        <InscribeNft />
+        <DeployDpl20 />
       ) : (
         <Container size="sm">
           <Paper mt="xl">

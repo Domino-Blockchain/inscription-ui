@@ -1,11 +1,12 @@
 'use client';
 
-import { Center, Container, Loader, Paper, SimpleGrid, Text } from '@mantine/core';
+import { Center, Container, Loader, Text } from '@mantine/core';
+import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 import { publicKey } from '@metaplex-foundation/umi';
 import { useQuery } from '@tanstack/react-query';
 import { useUmi } from '@/providers/useUmi';
 import { useEnv } from '@/providers/useEnv';
-import { ExplorerInscriptionDetails } from '@/components/Explorer/ExplorerInscriptionDetails';
+import { Explorer } from '@/components/Explorer/Explorer';
 
 export default function ExplorerPage({ params }: { params: { mint: string } }) {
   const env = useEnv();
@@ -14,12 +15,12 @@ export default function ExplorerPage({ params }: { params: { mint: string } }) {
   const {
     error,
     isPending,
-    data: inscriptionAccount,
+    data: nft,
   } = useQuery({
     retry: false,
     refetchOnMount: true,
     queryKey: ['fetch-nft', env, mint],
-    queryFn: async () => umi.rpc.getAccount(publicKey(mint)),
+    queryFn: () => fetchDigitalAsset(umi, publicKey(mint)),
   });
   return (
     <Container size="xl" pb="xl">
@@ -33,16 +34,7 @@ export default function ExplorerPage({ params }: { params: { mint: string } }) {
           <Text>Inscription does not exist</Text>
         </Center>
       )}
-      {inscriptionAccount && (
-        <SimpleGrid cols={1} mt="xl" spacing="lg" pb="xl">
-          {/* <Paper p="xl" radius="md">
-            <ExplorerNftDetails nft={nft} />
-          </Paper> */}
-          <Paper p="xl" radius="md">
-            <ExplorerInscriptionDetails inscriptionAccount={inscriptionAccount} />
-          </Paper>
-        </SimpleGrid>
-      )}
+      {nft && <Explorer nft={nft} />}
     </Container>
   );
 }

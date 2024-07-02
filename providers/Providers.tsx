@@ -1,7 +1,6 @@
 'use client';
 
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { ReactNode, useMemo, useState } from 'react';
 import { Notifications } from '@mantine/notifications';
@@ -14,7 +13,6 @@ import { Header } from '@/components/Header/Header';
 import { UmiProvider } from './UmiProvider';
 import { EnvProvider } from './EnvProvider';
 import { Env } from './useEnv';
-import { InscriptionCounterProvider } from './InscriptionCounterProvider';
 
 export function Providers({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -60,20 +58,18 @@ export function Providers({ children }: { children: ReactNode }) {
             <UmiProvider>
               <QueryClientProvider client={client}>
                 <ReactQueryStreamedHydration>
-                  <InscriptionCounterProvider>
-                    <Notifications />
-                    <AppShell
-                      header={{ height: 80 }}
-                      style={{
-                        backgroundColor: '#1a1a1a',
-                      }}
-                    >
-                      <AppShell.Header>
-                        <Header env={env} setEnv={doSetEnv} />
-                      </AppShell.Header>
-                      <AppShell.Main>{children}</AppShell.Main>
-                    </AppShell>
-                  </InscriptionCounterProvider>
+                  <Notifications />
+                  <AppShell
+                    header={{ height: 80 }}
+                    style={{
+                      backgroundColor: '#1a1a1a',
+                    }}
+                  >
+                    <AppShell.Header>
+                      <Header env={env} setEnv={doSetEnv} />
+                    </AppShell.Header>
+                    <AppShell.Main>{children}</AppShell.Main>
+                  </AppShell>
                 </ReactQueryStreamedHydration>
               </QueryClientProvider>
             </UmiProvider>

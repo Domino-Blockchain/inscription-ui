@@ -3,9 +3,14 @@ import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-ad
 import { mplTokenMetadata } from '@metaplex-foundation/mpl-token-metadata';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { ReactNode, useMemo } from 'react';
+import { nftStorageUploader } from '@metaplex-foundation/umi-uploader-nft-storage';
 import { mplInscription } from '@metaplex-foundation/mpl-inscription';
-import { dasApi } from '@metaplex-foundation/digital-asset-standard-api';
 import { UmiContext } from './useUmi';
+import { Umi, publicKey } from '@metaplex-foundation/umi';
+import {
+  createSplTokenProgram,
+  createSplAssociatedTokenProgram,
+} from '@metaplex-foundation/mpl-toolbox';
 
 export const UmiProvider = ({ children }: { children: ReactNode }) => {
   const wallet = useWallet();
@@ -15,15 +20,25 @@ export const UmiProvider = ({ children }: { children: ReactNode }) => {
   //   console.error("Add your nft.storage Token to .env!");
   //   nftStorageToken = 'AddYourTokenHere';
   // }
-  const umi = useMemo(
-    () =>
-      createUmi(connection)
-        .use(walletAdapterIdentity(wallet))
-        .use(mplTokenMetadata())
-        .use(dasApi())
-        .use(mplInscription()),
-    [wallet, connection]
-  );
+  const umi: Umi = useMemo(() => {
+    const _umi = createUmi(connection)
+      .use(walletAdapterIdentity(wallet))
+      .use(mplTokenMetadata())
+      .use(nftStorageUploader({ token: process.env.NEXT_PUBLIC_NFTSTORAGE_TOKEN! }))
+      .use(mplInscription());
+
+    _umi.programs.add({
+      ...createSplTokenProgram(),
+      publicKey: publicKey('TokenAAGbeQq5tGW2r5RoR3oauzN2EkNFiHNPw9q34s'),
+    });
+
+    _umi.programs.add({
+      ...createSplAssociatedTokenProgram(),
+      publicKey: publicKey('Dt8fRCpjeV6JDemhPmtcTKijgKdPxXHn9Wo9cXY5agtG'),
+    });
+
+    return _umi;
+  }, [wallet, connection]);
 
   return <UmiContext.Provider value={{ umi }}>{children}</UmiContext.Provider>;
 };

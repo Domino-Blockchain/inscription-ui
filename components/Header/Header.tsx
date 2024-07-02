@@ -1,15 +1,20 @@
-import { Center, Container, Flex, Group, Menu, NumberFormatter, Title } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons-react';
+import { Center, Container, Flex, Group, Image, Menu, Title } from '@mantine/core';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { IconChevronDown } from '@tabler/icons-react';
 
-import { usePathname } from 'next/navigation';
-import classes from './Header.module.css';
-import { MetaplexLogo, MetaplexLogoVariant } from '../MetaplexLogo';
 import { Env } from '@/providers/useEnv';
-import { useInscriptionCounter } from '@/providers/useInscriptionCounter';
 import RetainQueryLink from '../RetainQueryLink';
+import classes from './Header.module.css';
 
-const HeaderLink = ({ label, link, disabled }: { label: string, link: string, disabled?: boolean }) => {
+const HeaderLink = ({
+  label,
+  link,
+  disabled,
+}: {
+  label: string;
+  link: string;
+  disabled?: boolean;
+}) => {
   const cls = disabled ? [classes.disabled, classes.link].join(' ') : classes.link;
   return (
     <RetainQueryLink href={link} className={cls}>
@@ -19,27 +24,26 @@ const HeaderLink = ({ label, link, disabled }: { label: string, link: string, di
 };
 
 export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => void }) {
-  const pathname = usePathname();
-  const { count } = useInscriptionCounter();
+  // const pathname = usePathname();
+  // const { count } = useInscriptionCounter();
 
   return (
-    <Container
-      size="xl"
-      h={80}
-      pt={12}
-    >
+    <Container size="xl" h={80} pt={12}>
       <div className={classes.inner}>
         <Flex justify="center" align="center" gap="md">
           <RetainQueryLink href="/">
-            <MetaplexLogo variant={MetaplexLogoVariant.Small} />
+            <Image src="/logo.png" alt="Domichain logo" width={32} height={32} />
           </RetainQueryLink>
           <Title order={2}>Inscriptions</Title>
-          {pathname !== '/' &&
+          {/* {pathname !== '/' && (
             <Title c="red" fw={900} order={3}>
               <NumberFormatter prefix="# " value={count} thousandSeparator />
-            </Title>}
+            </Title>
+          )} */}
         </Flex>
         <Group>
+          <HeaderLink label="Create NFT" link="/create-nft" />
+          <HeaderLink label="Deploy BRC-20" link="/deploy-dpl20" />
           <HeaderLink label="Inscribe" link="/inscribe" />
           <HeaderLink label="Explorer" link="/explorer" />
           <HeaderLink label="Manage" link="/manage" />
