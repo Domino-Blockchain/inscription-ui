@@ -42,7 +42,7 @@ export const useNftInscription = (
 
   return useQuery({
     // refetchOnMount: true,
-    queryKey: ['fetch-nft-inscription', env, nft.publicKey],
+    queryKey: ['fetch-nft-inscription', env, nft.publicKey, options],
     queryFn: async () => {
       const inscriptionPda = findMintInscriptionPda(umi, { mint: nft.mint.publicKey });
       const inscriptionAccount = options.inscriptionAccount ?? inscriptionPda[0];
