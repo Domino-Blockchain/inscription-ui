@@ -1,11 +1,32 @@
-import { Center, Image, Loader, Stack, Text, Title } from '@mantine/core';
+import { Badge, Center, Flex, Image, Loader, Paper, Stack, Text, Title } from '@mantine/core';
 import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 import { CodeHighlightTabs } from '@mantine/code-highlight';
+import { Carousel } from '@mantine/carousel';
+import { useQuery } from '@tanstack/react-query';
 import { useNftJson } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
+import classes from './ExplorerNftDetails.module.css';
 
 export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
   const jsonInfo = useNftJson(nft);
+
+  const { isLoading: isVerifying, data: isVerified } = useQuery({
+    queryKey: ['verified', jsonInfo.data],
+    queryFn: async () => {
+      const response = await fetch('/api/verify-nft', {
+        method: 'POST',
+        body: JSON.stringify(jsonInfo.data),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      });
+      const responseBody = await response.json();
+      return !!responseBody.verified;
+    },
+    enabled: !!jsonInfo.data,
+  });
+
   return (
     <Stack>
       <Text fz="md" tt="uppercase" fw={700} c="dimmed">
@@ -17,9 +38,38 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
         </Center>
       ) : (
         <>
-          <Title>{jsonInfo.data.name}</Title>
+          <Flex gap="md" justify="flex-start" align="center" direction="row">
+            <Title>{jsonInfo.data.name}</Title>
 
-          <Image src={jsonInfo.data.image} maw={320} />
+            {isVerifying ? (
+              <Loader color="gray" size="xs" />
+            ) : (
+              <Badge variant="light" color={isVerified ? 'green' : 'red'} radius="md">
+                {isVerified ? 'Verified' : 'Tampered'}
+              </Badge>
+            )}
+          </Flex>
+
+          <Paper radius="md" bg="dark">
+            {jsonInfo.data.images ? (
+              <Carousel
+                classNames={classes}
+                slideSize="70%"
+                controlsOffset="lg"
+                withIndicators
+                loop
+              >
+                {jsonInfo.data.images.map((image: any) => (
+                  <Carousel.Slide key={image.url}>
+                    <Image src={image.url} />
+                  </Carousel.Slide>
+                ))}
+              </Carousel>
+            ) : jsonInfo.data.image ? (
+              <Image src={jsonInfo.data.image} />
+            ) : null}
+          </Paper>
+
           {jsonInfo.data.description && (
             <ExplorerStat label="Description" value={jsonInfo.data.description} />
           )}
