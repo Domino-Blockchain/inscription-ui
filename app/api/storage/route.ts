@@ -104,8 +104,10 @@ export async function POST(request: Request) {
   await createTerritory(api, keyring);
 
   const fileId = await uploadFile(api, keyring, file);
+  const fileExtension = path.extname(file.name).toLowerCase();
+
   return Response.json({
     fileId,
-    fileUrl: `${config.gatewayURL}/open/${fileId}`,
+    fileUrl: `${config.gatewayURL}/open/${fileId}${fileExtension}`,
   });
 }

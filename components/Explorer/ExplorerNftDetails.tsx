@@ -54,6 +54,7 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
             {jsonInfo.data.images ? (
               <Carousel
                 classNames={classes}
+                height={300}
                 slideSize="70%"
                 controlsOffset="lg"
                 withIndicators
