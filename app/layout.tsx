@@ -3,7 +3,7 @@ import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { NavigationProgress } from '@mantine/nprogress';
 
-import { theme } from '../theme';
+import { theme } from '@/theme';
 
 import '@mantine/dropzone/styles.css';
 import '@mantine/carousel/styles.css';

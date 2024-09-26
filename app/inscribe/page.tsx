@@ -3,6 +3,7 @@
 import { Center, Container, Paper, Text } from '@mantine/core';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { InscribeNft } from '@/components/Inscribe/InscribeNft';
+import strings from '@/localization';
 
 export default function InscribePage() {
   const wallet = useWallet();
@@ -15,7 +16,7 @@ export default function InscribePage() {
         <Container size="sm">
           <Paper mt="xl">
             <Center h="20vh">
-              <Text>Connect your wallet to begin.</Text>
+              <Text>{strings.connectYourWalletToBegin}</Text>
             </Center>
           </Paper>
         </Container>
