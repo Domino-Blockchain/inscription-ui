@@ -15,4 +15,8 @@ export default withBundleAnalyzer({
   experimental: {
     optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
   },
+  webpack: (config) => {
+    config.externals = [...config.externals, 'cess-js-sdk-nodejs'];
+    return config;
+  },
 });

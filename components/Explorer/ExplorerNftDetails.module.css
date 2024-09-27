@@ -1,0 +1,16 @@
+.root {
+  width: 100%;
+}
+
+.slide {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.control {
+  &[data-inactive] {
+    opacity: 0;
+    cursor: default;
+  }
+}

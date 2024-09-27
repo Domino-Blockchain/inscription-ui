@@ -61,9 +61,21 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
         return;
       }
 
+      const amount = Number(mintAmount);
+      const limit = Number(inscriptionInfo.data.json?.lim);
+
+      if (amount > limit) {
+        notifications.show({
+          title: 'Error',
+          message: `You can't mint more than ${limit} BRC-20 tokens at once`,
+          color: 'red',
+        });
+        return;
+      }
+
       await mintV1(umi, {
         mint: mintAddress.value,
-        amount: Number(mintAmount) * LAMPORTS_PER_SOL,
+        amount: amount * LAMPORTS_PER_SOL,
         tokenOwner: publicKey(wallet.publicKey!.toBase58()),
         tokenStandard: TokenStandard.Fungible,
       }).sendAndConfirm(umi);

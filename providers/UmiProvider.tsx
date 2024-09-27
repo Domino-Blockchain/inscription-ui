@@ -24,7 +24,7 @@ export const UmiProvider = ({ children }: { children: ReactNode }) => {
     const _umi = createUmi(connection)
       .use(walletAdapterIdentity(wallet))
       .use(mplTokenMetadata())
-      .use(nftStorageUploader({ token: process.env.NEXT_PUBLIC_NFTSTORAGE_TOKEN! }))
+      // .use(nftStorageUploader({ token: process.env.NEXT_PUBLIC_NFTSTORAGE_TOKEN! }))
       .use(mplInscription());
 
     _umi.programs.add({
