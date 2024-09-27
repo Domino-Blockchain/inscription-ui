@@ -17,7 +17,7 @@ const english = {
   mintLabel: 'Mint',
   descriptionLabel: 'Description',
   symbolLabel: 'Symbol',
-  imageFileLabel: 'Image File',
+  imageFilesLabel: 'Image Files',
   createNFTButton: 'Create NFT',
   dropFilesHere: 'Drop files here',
   fileLessThan30mb: 'File less than 30mb',

@@ -17,7 +17,7 @@ const chineseTraditional = {
     mintLabel: '薄荷',
     descriptionLabel: '描述',
     symbolLabel: '象徵',
-    imageFileLabel: '圖片檔案',
+    imageFilesLabel: '影像檔案',
     createNFTButton: '創建NFT',
     dropFilesHere: '將文件拖放到此處',
     fileLessThan30mb: '檔案小於 30mb',

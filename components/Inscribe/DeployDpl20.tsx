@@ -10,7 +10,7 @@ import {
   setMint,
   writeData,
 } from '@metaplex-foundation/mpl-inscription';
-import { createFungible } from '@metaplex-foundation/mpl-token-metadata';
+import { createFungible, printSupply } from '@metaplex-foundation/mpl-token-metadata';
 import { TransactionBuilder, generateSigner, percentAmount } from '@metaplex-foundation/umi';
 import { base58 } from '@metaplex-foundation/umi/serializers';
 import { useMutation } from '@tanstack/react-query';
@@ -39,6 +39,7 @@ export function DeployDpl20() {
         uri: '',
         decimals: 9,
         sellerFeeBasisPoints: percentAmount(0),
+        printSupply: printSupply('Limited' as const, Number(supply)),
       }).sendAndConfirm(umi);
 
       const inscriptionAccount = await findMintInscriptionPda(umi, {
