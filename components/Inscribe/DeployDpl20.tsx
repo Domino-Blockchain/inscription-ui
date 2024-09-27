@@ -17,6 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useUmi } from '@/providers/useUmi';
+import strings from '@/localization';
 
 export function DeployDpl20() {
   const umi = useUmi();
@@ -103,8 +104,8 @@ export function DeployDpl20() {
     },
     onSuccess: () =>
       notifications.show({
-        title: 'Success',
-        message: 'Your BRC-20 token has been deployed',
+        title: strings.successNotificationTitle,
+        message: strings.yourBrc20TokenHasBeenDeployed,
         color: 'green',
       }),
     onError: (error) => console.error(error),
@@ -112,18 +113,18 @@ export function DeployDpl20() {
 
   return (
     <Stack my="lg" gap="sm">
-      <Input.Wrapper label="Name">
+      <Input.Wrapper label={strings.nameLabel}>
         <Input value={ticker} onChange={(event) => setTicker(event.currentTarget.value)} />
       </Input.Wrapper>
-      <Input.Wrapper label="Supply">
+      <Input.Wrapper label={strings.supplyLabel}>
         <Input value={supply} onChange={(event) => setSupply(event.currentTarget.value)} />
       </Input.Wrapper>
-      <Input.Wrapper label="Limit">
+      <Input.Wrapper label={strings.limitLabel}>
         <Input value={limit} onChange={(event) => setLimit(event.currentTarget.value)} />
       </Input.Wrapper>
       <Group justify="flex-end" mt="md">
         <Button onClick={mutate as never} loading={isPending}>
-          Deploy
+          {strings.deployButton}
         </Button>
       </Group>
     </Stack>

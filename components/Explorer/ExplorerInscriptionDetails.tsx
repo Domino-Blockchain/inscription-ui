@@ -32,6 +32,7 @@ import { useUmi } from '@/providers/useUmi';
 import { useNftInscription } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
 import RetainQueryLink from '@/components/RetainQueryLink';
+import strings from '@/localization';
 
 export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
   const umi = useUmi();
@@ -120,8 +121,8 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
     },
     onSuccess: () =>
       notifications.show({
-        title: 'Success',
-        message: 'BRC-20 has been successfully minted',
+        title: strings.successNotificationTitle,
+        message: strings.brc20HasBeenMinted,
         color: 'green',
       }),
     onError: (error) => console.error(error),
@@ -130,7 +131,7 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
   return (
     <Stack>
       <Text fz="md" tt="uppercase" fw={700} c="dimmed">
-        Inscription Details
+          {strings.inscriptionDetailsTitle}
       </Text>
       {inscriptionInfo.isPending ? (
         <Center h="20vh">
@@ -139,9 +140,9 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
       ) : inscriptionInfo.error || !inscriptionInfo?.data.metadataPdaExists ? (
         <Center h="20vh">
           <Stack align="center">
-            <Text>NFT is not inscribed</Text>
+            <Text>{strings.nftIsNotInscribedTitle}</Text>
             <RetainQueryLink href="/inscribe">
-              <Button>Inscribe now</Button>
+              <Button>{strings.inscribeNowButton}</Button>
             </RetainQueryLink>
           </Stack>
         </Center>
@@ -151,24 +152,24 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
           {inscriptionInfo.data?.image && (
             <>
               <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                Inscribed Image
+                  {strings.inscribedImageTitle}
               </Text>
               <Image src={URL.createObjectURL(inscriptionInfo.data?.image)} maw={320} />
             </>
           )}
           <ExplorerStat
-            label="Inscription address (JSON)"
+            label={strings.inscriptionAddressJsonLabel}
             value={inscriptionInfo.data?.inscriptionPda[0]!}
             copyable
           />
           <ExplorerStat
-            label="Inscription metadata address"
+            label={strings.inscriptionMetadataAddressLabel}
             value={inscriptionInfo.data?.inscriptionMetadataAccount[0]!}
             copyable
           />
           {inscriptionInfo.data?.imagePdaExists && (
             <ExplorerStat
-              label="Inscription image address"
+              label={strings.inscriptionImageAddressLabel}
               value={inscriptionInfo.data?.imagePda[0]!}
               copyable
             />
@@ -177,18 +178,18 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
             <>
               <Group gap="xs">
                 <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-                  Inscribed JSON
+                    {strings.inscribedJsonTitle}
                 </Text>
                 {!inscriptionInfo.data?.jsonValid && (
                   <Badge color="red" variant="light">
-                    Invalid JSON
+                      {strings.invalidJsonTitle}
                   </Badge>
                 )}
               </Group>
               <CodeHighlightTabs
                 withExpandButton
-                expandCodeLabel="Show full JSON"
-                collapseCodeLabel="Show less"
+                expandCodeLabel={strings.expandCodeLabel}
+                collapseCodeLabel={strings.collapseCodeLabel}
                 defaultExpanded={false}
                 mb="lg"
                 code={[
@@ -205,10 +206,10 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
             <Input
               value={mintAmount}
               onChange={(event) => setMintAmount(event.target.value)}
-              placeholder="Mint amount"
+              placeholder={strings.mintAmountPlaceholder}
             />
             <Button onClick={() => mutate()} loading={isPending}>
-              Mint
+                {strings.mintButton}
             </Button>
           </Group>
         </>

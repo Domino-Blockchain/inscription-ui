@@ -1,4 +1,3 @@
-import { useUmi } from '@/providers/useUmi';
 import { Button, FileInput, Group, Input, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { createNft } from '@metaplex-foundation/mpl-token-metadata';
@@ -11,13 +10,15 @@ import { base58 } from '@metaplex-foundation/umi/serializers';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useUmi } from '@/providers/useUmi';
+import strings from '@/localization';
 
 export function CreateNft() {
   const umi = useUmi();
   const router = useRouter();
 
   const [name, setName] = useState('TestNFT');
-  const [description, setDescription] = useState('This is a test NFT');
+  const [description, setDescription] = useState(strings.thisIsATestNFT);
   const [symbol, setSymbol] = useState('TEST');
   const [file, setFile] = useState<File | null>(null);
 
@@ -54,8 +55,8 @@ export function CreateNft() {
     },
     onSuccess: () =>
       notifications.show({
-        title: 'Success',
-        message: 'Your NFT has been created',
+        title: strings.successNotificationTitle,
+        message: strings.yourNFTHasBeenCreated,
         color: 'green',
       }),
     onError: (error) => console.error(error),
@@ -63,22 +64,22 @@ export function CreateNft() {
 
   return (
     <Stack my="lg" gap="sm">
-      <Input.Wrapper label="Name" required>
+      <Input.Wrapper label={strings.nameLabel} required>
         <Input value={name} onChange={(event) => setName(event.currentTarget.value)} />
       </Input.Wrapper>
-      <Input.Wrapper label="Description">
+      <Input.Wrapper label={strings.descriptionLabel}>
         <Input
           value={description}
           onChange={(event) => setDescription(event.currentTarget.value)}
         />
       </Input.Wrapper>
-      <Input.Wrapper label="Symbol" required>
+      <Input.Wrapper label={strings.symbolLabel} required>
         <Input value={symbol} onChange={(event) => setSymbol(event.currentTarget.value)} />
       </Input.Wrapper>
-      <FileInput label="Image File" required type="button" onChange={setFile} />
+      <FileInput label={strings.imageFileLabel} required type="button" onChange={setFile} />
       <Group justify="flex-end" mt="md">
         <Button onClick={mutate as never} loading={isPending}>
-          Create NFT
+          {strings.createNFTButton}
         </Button>
       </Group>
     </Stack>

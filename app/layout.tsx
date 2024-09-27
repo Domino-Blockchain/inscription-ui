@@ -11,10 +11,11 @@ import '@mantine/notifications/styles.css';
 import '@mantine/code-highlight/styles.css';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import { Providers } from '@/providers/Providers';
+import strings from '@/localization';
 
 export const metadata = {
   title: 'Domichain Inscription UI',
-  description: 'Mint and manage inscriptions on the Domichain blockchain.',
+  description: strings.siteDescription,
 };
 
 export default function RootLayout({ children }: { children: any }) {

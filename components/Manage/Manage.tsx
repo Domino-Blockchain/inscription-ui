@@ -19,6 +19,7 @@ import { ManageJson } from './ManageJson';
 import { buildAllocate, buildChunkedWriteData, prepareAndSignTxs, sendTxsWithRetries } from '@/lib/tx';
 import { ManageDanger } from './ManageDanger';
 import { ManageCustom } from './ManageCustom';
+import strings from '@/localization';
 
 export function Manage({ nft }: { nft: DasApiAsset }) {
   const inscriptionInfo = useNftInscription(nft, { fetchImage: true, fetchMetadata: true, fetchJson: true });
@@ -83,8 +84,8 @@ export function Manage({ nft }: { nft: DasApiAsset }) {
 
       if (initRes.errors.length > 0) {
         notifications.show({
-          title: 'Error inscribing',
-          message: 'Could not confirm inscription account initialization',
+          title: strings.errorInscribingNotificationTitle,
+          message: strings.couldNotConfirmInscriptionAccountInit,
           color: 'red',
         });
         return;
@@ -102,23 +103,23 @@ export function Manage({ nft }: { nft: DasApiAsset }) {
 
       if (dataRes.errors.length > 0) {
         notifications.show({
-          title: 'Error inscribing',
-          message: 'Could not confirm inscription writes',
+          title: strings.errorInscribingNotificationTitle,
+          message: strings.couldNotConfirmInscriptionWrites,
           color: 'red',
         });
         return;
       }
 
       notifications.show({
-        title: 'Inscribed',
-        message: 'Your inscription has been updated',
+        title: strings.inscribedNotificationTitle,
+        message: strings.yourInscriptionHasBeenUpdated,
         color: 'green',
       });
 
       inscriptionInfo.refetch();
     } catch (e: any) {
       notifications.show({
-        title: 'Error inscribing',
+        title: strings.errorInscribingNotificationTitle,
         message: e.message,
         color: 'red',
       });
@@ -133,19 +134,19 @@ export function Manage({ nft }: { nft: DasApiAsset }) {
       <Tabs orientation="vertical" defaultValue="details" mt="xl">
         <Tabs.List>
           <Tabs.Tab value="details" leftSection={<IconInfoCircle style={iconStyle} />}>
-            Details
+            {strings.detailsTab}
           </Tabs.Tab>
           <Tabs.Tab value="image" leftSection={<IconPhoto style={iconStyle} />}>
-            Image
+            {strings.imageTab}
           </Tabs.Tab>
           <Tabs.Tab value="json" leftSection={<IconBraces style={iconStyle} />}>
-            JSON
+            {strings.jsonTab}
           </Tabs.Tab>
           <Tabs.Tab value="custom" leftSection={<IconWriting style={iconStyle} />}>
-            Custom data
+            {strings.customDataTab}
           </Tabs.Tab>
           <Tabs.Tab value="danger" leftSection={<IconAlertTriangle style={iconStyle} />}>
-            Danger zone
+            {strings.dangerZoneTab}
           </Tabs.Tab>
         </Tabs.List>
 
@@ -207,8 +208,8 @@ export function Manage({ nft }: { nft: DasApiAsset }) {
       <Modal opened={opened} onClose={() => { }} centered withCloseButton={false}>
         <Center my="xl">
           <Stack gap="md" align="center">
-            <Title order={3}>Updating Inscription</Title>
-            <Text>Be prepared to approve many transactions...</Text>
+            <Title order={3}>{strings.updatingInscriptionTitle}</Title>
+            <Text>{strings.bePreparedToApproveManyTransactions}</Text>
             <Center w="100%">
               <Stack w="100%">
                 <Progress value={(progress / maxProgress) * 100} animated />

@@ -3,13 +3,14 @@ import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 import { CodeHighlightTabs } from '@mantine/code-highlight';
 import { useNftJson } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
+import strings from '@/localization';
 
 export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
   const jsonInfo = useNftJson(nft);
   return (
     <Stack>
       <Text fz="md" tt="uppercase" fw={700} c="dimmed">
-        NFT Details
+          {strings.nftDetailsTitle}
       </Text>
       {jsonInfo.isPending || jsonInfo.isError ? (
         <Center h="20vh">
@@ -21,17 +22,17 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
 
           <Image src={jsonInfo.data.image} maw={320} />
           {jsonInfo.data.description && (
-            <ExplorerStat label="Description" value={jsonInfo.data.description} />
+            <ExplorerStat label={strings.descriptionLabel} value={jsonInfo.data.description} />
           )}
-          <ExplorerStat label="Mint" value={nft.mint.publicKey} copyable />
+          <ExplorerStat label={strings.mintLabel} value={nft.mint.publicKey} copyable />
 
           <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-            JSON Metadata
+              {strings.jsonMetadataTitle}
           </Text>
           <CodeHighlightTabs
             withExpandButton
-            expandCodeLabel="Show full JSON"
-            collapseCodeLabel="Show less"
+            expandCodeLabel={strings.expandCodeLabel}
+            collapseCodeLabel={strings.collapseCodeLabel}
             defaultExpanded={false}
             mb="lg"
             code={[
