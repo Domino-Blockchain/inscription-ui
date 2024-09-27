@@ -5,16 +5,17 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import os from 'node:os';
 
-const Mnemonic = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk';
-const MyAddress = 'cXgaee2N8E77JJv9gdsGAckv1Qsf3hqWYf7NL4q6ZuQzuAUtB';
-const TerritoryName = 'domichain_nfts';
+const Mnemonic = process.env.NEXT_CESS_MNEMONIC!;
+const MyAddress = process.env.NEXT_CESS_ADDRESS!;
+const TerritoryName = process.env.NEXT_CESS_TERRITORY_NAME!;
 
 const config = {
-  nodeURL: ['wss://testnet-rpc1.cess.cloud/ws/', 'wss://testnet-rpc.cess.network/ws/'],
-  gatewayURL: 'https://deoss-sgp.cess.network',
-  gatewayAddr: 'cXf3X3ugTnivQA9iDRYmLNzxSqybgDtpStBjFcBZEoH33UVaz',
+  nodeURL: process.env.NEXT_CESS_NODE_URLS!.split(','),
+  gatewayURL: process.env.NEXT_CESS_GATEWAY_URL!,
+  gatewayAddr: process.env.NEXT_CESS_GATEWAY_ADDRESS!,
   keyringOption: { type: 'sr25519', ss58Format: 11330 },
 };
+console.log('CESS config loaded', config);
 
 async function authorizeGateway(api: any, keyring: any) {
   console.debug('Authorizing Gateway...');
@@ -56,7 +57,7 @@ async function createTerritory(api: any, keyring: any) {
   }
 
   if (!territoryExists) {
-    console.log('Create territory:', config.gatewayAddr);
+    console.log('Create territory:', config.gatewayAddr, TerritoryName);
     const result = await territory.createTerritory(Mnemonic, TerritoryName, 10, 30, console.log);
     console.log(result, '\n');
   }
