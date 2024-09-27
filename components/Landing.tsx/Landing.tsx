@@ -2,6 +2,7 @@
 
 import { Container, Text, Title } from '@mantine/core';
 import classes from './Landing.module.css';
+import strings from '@/localization';
 
 export function Landing() {
   return (
@@ -9,10 +10,9 @@ export function Landing() {
       <Container size="md">
         <div className={classes.inner}>
           <div className={classes.content}>
-            <Title className={classes.title}>Fully on-chain NFTs</Title>
+            <Title className={classes.title}>{strings.landingTitle}</Title>
             <Text c="dimmed" mt="md">
-              Inscribe old NFTs, mint new inscribed NFTs, and manage all of your Inscriptions all in
-              one place
+              {strings.landingText}
             </Text>
           </div>
         </div>

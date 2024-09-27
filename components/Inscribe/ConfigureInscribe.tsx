@@ -35,6 +35,7 @@ import classes from './ConfigureInscribe.module.css';
 import { DropzoneButton } from '../Dropzone/DropzoneButton';
 import { UNCATAGORIZED } from '@/components/Inscribe/NftSelector';
 import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
+import strings from '@/localization';
 
 interface Settings {
   quality: number;
@@ -111,7 +112,7 @@ function Row({
       );
     }
     if (!json || !image) {
-      return <Text>Unable to load stats</Text>;
+      return <Text>{strings.unableToLoadStatsError}</Text>;
     }
 
     const jsonLength = JSON.stringify(json).length;
@@ -175,7 +176,7 @@ function Row({
       },
       error(err) {
         notifications.show({
-          title: 'Error compressing image',
+          title: strings.errorCompressingImageNotificationTitle,
           message: err.message,
           color: 'red',
         });
@@ -196,7 +197,7 @@ function Row({
     }
 
     if ((!json && !jsonOverride) || (!image && !imageOverride && imageType !== 'None')) {
-      return <Text>Unable to load stats</Text>;
+      return <Text>{strings.unableToLoadStatsError}</Text>;
     }
 
     const j = jsonOverride ?? json;
@@ -206,19 +207,19 @@ function Row({
 
     return [
       {
-        label: 'Size',
+        label: strings.sizeLabel,
         stat: prettyBytes(jsonLength + (iInfo?.size || 0)),
       },
       {
-        label: 'Cost',
+        label: strings.costLabel,
         stat: `~${((jsonLength + (iInfo?.size || 0)) * 0.00000696).toFixed(3)} DOMI`,
       },
       {
-        label: 'Dimensions',
+        label: strings.dimensionsLabel,
         stat: iInfo?.width ? `${iInfo.width}x${iInfo.height}` : '-',
       },
       {
-        label: 'Type',
+        label: strings.typeLabel,
         stat: iInfo?.type || '-',
       },
     ].map(({ label, stat }) => (
@@ -267,8 +268,8 @@ function Row({
             {json && (
               <CodeHighlightTabs
                 withExpandButton
-                expandCodeLabel="Show full JSON"
-                collapseCodeLabel="Show less"
+                expandCodeLabel={strings.expandCodeLabel}
+                collapseCodeLabel={strings.collapseCodeLabel}
                 defaultExpanded={false}
                 mt="md"
                 mb="lg"
@@ -309,14 +310,14 @@ function Row({
 
           <Tabs.Panel value="image">
             <Select
-              label="Image inscription mode"
+              label={strings.imageInscriptionModeLabel}
               data={imageTypeOptions}
               {...form.getInputProps(`${nft.publicKey}.imageType`)}
             />
             {imageType === 'Compress' && (
               <>
                 <Text size="sm" mt="md">
-                  Output format
+                  {strings.outputFormat}
                 </Text>
                 <SegmentedControl
                   data={['image/jpeg', 'image/png']}
@@ -324,7 +325,7 @@ function Row({
                 />
 
                 <Text size="sm" mt="md">
-                  Size: {size}%
+                  {strings.formatString(strings.sizePercentage, size)}
                 </Text>
                 <Slider
                   marks={[
@@ -335,7 +336,7 @@ function Row({
                   {...form.getInputProps(`${nft.publicKey}.size`)}
                 />
                 <Text size="sm" pt="xl">
-                  Quality: {quality}%
+                  {strings.formatString(strings.qualityPercentage, quality)}
                 </Text>
                 <Slider
                   mb="xl"
@@ -349,9 +350,9 @@ function Row({
                 />
               </>
             )}
-            {imageType === 'None' && <Text mt="md">Skip the image inscription step</Text>}
+            {imageType === 'None' && <Text mt="md">{strings.skipTheImageInscriptionStep}</Text>}
             {imageType === 'Raw' && (
-              <Text mt="md">Inscribe the raw image from the existing NFT</Text>
+              <Text mt="md">{strings.inscribeTheRawImageFromExistingNft}</Text>
             )}
             {imageType === 'Override' && (
               <>
@@ -373,7 +374,7 @@ function Row({
                       form.setFieldValue(`${nft.publicKey}.imageOverride`, undefined as any)
                     }
                   >
-                    Remove image
+                    {strings.removeImageButton}
                   </Button>
                 )}
               </>
@@ -396,8 +397,8 @@ function Row({
                     {jsonOverride && (
                       <CodeHighlightTabs
                         withExpandButton
-                        expandCodeLabel="Show full JSON"
-                        collapseCodeLabel="Show less"
+                        expandCodeLabel={strings.expandCodeLabel}
+                        collapseCodeLabel={strings.collapseCodeLabel}
                         defaultExpanded={false}
                         mt="md"
                         mb="lg"
@@ -417,13 +418,13 @@ function Row({
                         form.setFieldValue(`${nft.publicKey}.jsonOverride`, undefined as any)
                       }
                     >
-                      Remove JSON
+                      {strings.removeJsonButton}
                     </Button>
                   </>
                 )}
               </>
             ) : (
-              <Text>Inscribe the raw JSON from the existing NFT</Text>
+              <Text>{strings.inscribeTheRawJsonFromExistingNft}</Text>
             )}
           </Tabs.Panel>
         </Tabs>
@@ -433,14 +434,14 @@ function Row({
           <Stack justify="space-between" h="100%">
             <Box>
               <Text size="lg" mb="sm">
-                Original
+                {strings.originalTitle}
               </Text>
               <Group justify="space-between">{stats}</Group>
             </Box>
             {imageType === 'Compress' && (
               <Center>
                 <Stack gap="xs" ta="center" align="center">
-                  <Text>Cost reduction</Text>
+                  <Text>{strings.costReduction}</Text>
                   <>
                     <Text color="green" size="xl">
                       <b>{(spaceSaved * 100).toFixed(2)}%</b>
@@ -583,7 +584,7 @@ export function ConfigureInscribe({
 
         if (config.imageType === 'Override' && !config.imageOverride) {
           notifications.show({
-            message: 'Please upload an image file or switch to a different image inscription mode',
+            message: strings.pleaseUploadImageFileNotification,
             color: 'red',
           });
           valid = false;
@@ -606,14 +607,14 @@ export function ConfigureInscribe({
       <Group my="lg" justify="space-between">
         <Group>
           <Checkbox
-            label="Collate by collection"
+            label={strings.collateByCollectionLabel}
             checked={collate}
             onChange={() => {
               setCollate(!collate);
             }}
           />
         </Group>
-        <Button onClick={handleConfigure}>Next</Button>
+        <Button onClick={handleConfigure}>{strings.nextButton}</Button>
       </Group>
       <Stack gap="lg">
         {collate

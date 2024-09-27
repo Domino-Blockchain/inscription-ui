@@ -3,6 +3,7 @@ import { Badge, Button, Center, Group, JsonInput, Loader, Text } from '@mantine/
 import { CodeHighlightTabs } from '@mantine/code-highlight';
 import { useEffect, useState } from 'react';
 import { useNftInscription } from '../Inscribe/hooks';
+import strings from '@/localization';
 
 export function ManageJson({ nft, onUpdate }: { nft: DasApiAsset, onUpdate: (json: string) => void }) {
   const inscriptionInfo = useNftInscription(nft, { fetchImage: true, fetchMetadata: true, fetchJson: true });
@@ -27,17 +28,17 @@ export function ManageJson({ nft, onUpdate }: { nft: DasApiAsset, onUpdate: (jso
       {inscriptionInfo.isPending ? <Center h="20vh"><Loader /></Center> :
         <>
           <Group gap="xs">
-            <Text fz="xs" tt="uppercase" fw={700} c="dimmed">Inscribed JSON</Text>
-            {!inscriptionInfo.data?.metadata ? <Badge color="red" variant="light">No JSON found</Badge> :
-              !inscriptionInfo.data?.jsonValid && <Badge color="red" variant="light">Invalid JSON</Badge>}
+            <Text fz="xs" tt="uppercase" fw={700} c="dimmed">{strings.inscribedJsonTitle}</Text>
+            {!inscriptionInfo.data?.metadata ? <Badge color="red" variant="light">{strings.noJsonFoundTitle}</Badge> :
+              !inscriptionInfo.data?.jsonValid && <Badge color="red" variant="light">{strings.invalidJsonTitle}</Badge>}
           </Group>
           {inscriptionInfo.data?.metadata &&
             <>
 
               <CodeHighlightTabs
                 withExpandButton
-                expandCodeLabel="Show full JSON"
-                collapseCodeLabel="Show less"
+                expandCodeLabel={strings.expandCodeLabel}
+                collapseCodeLabel={strings.collapseCodeLabel}
                 defaultExpanded={false}
                 mb="lg"
                 code={[{
@@ -47,14 +48,14 @@ export function ManageJson({ nft, onUpdate }: { nft: DasApiAsset, onUpdate: (jso
                 }]}
               />
             </>}
-          <Text fz="xs" tt="uppercase" fw={700} c="dimmed">Inscribe new JSON</Text>
+          <Text fz="xs" tt="uppercase" fw={700} c="dimmed">{strings.inscribeNewJson}</Text>
           <JsonInput
             value={newJson}
             onChange={setNewJson}
-            validationError="Invalid JSON"
+            validationError={strings.invalidJsonError}
             autosize
           />
-          <Button mt="md" size="md" disabled={!validJson} onClick={() => onUpdate(newJson)}>Update JSON</Button>
+          <Button mt="md" size="md" disabled={!validJson} onClick={() => onUpdate(newJson)}>{strings.updateJsonButton}</Button>
         </>}
 
     </>

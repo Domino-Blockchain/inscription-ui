@@ -11,6 +11,7 @@ import { useUmi } from '@/providers/useUmi';
 import { InscriptionInfo } from '../Inscribe/types';
 import { useEnv } from '@/providers/useEnv';
 import { ManageNftCard } from './ManageNftCard';
+import strings from '@/localization';
 
 export function ManageLanding() {
   const umi = useUmi();
@@ -90,9 +91,9 @@ export function ManageLanding() {
 
   return (
     <Box mt="xl">
-      <Title mb="lg">Inscriptions you can manage</Title>
+      <Title mb="lg">{strings.inscriptionsYouCanManageTitle}</Title>
       <Checkbox
-        label="Show only owned"
+        label={strings.showOnlyOwnedCheckboxLabel}
         checked={showOnlyOwned}
         disabled={isPending}
         onChange={() => {
@@ -106,7 +107,7 @@ export function ManageLanding() {
         </Center>
       ) : error ? (
         <Center h="20vh" ta="center">
-          <Text>There was an error fetching your Inscriptions.</Text>
+          <Text>{strings.errorFetchingInscriptions}</Text>
         </Center>
       ) : nfts?.length ? (
         <SimpleGrid
@@ -128,7 +129,7 @@ export function ManageLanding() {
         </SimpleGrid>
       ) : (
         <Center h="20vh" ta="center">
-          <Text>You don&apos;t have any Inscriptions.</Text>
+          <Text>{strings.youDontHaveAnyInscriptions}</Text>
         </Center>
       )}
     </Box>

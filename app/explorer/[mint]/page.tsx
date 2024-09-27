@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useUmi } from '@/providers/useUmi';
 import { useEnv } from '@/providers/useEnv';
 import { Explorer } from '@/components/Explorer/Explorer';
+import strings from '@/localization';
 
 export default function ExplorerPage({ params }: { params: { mint: string } }) {
   const env = useEnv();
@@ -31,7 +32,7 @@ export default function ExplorerPage({ params }: { params: { mint: string } }) {
       )}
       {error && (
         <Center h="20vh">
-          <Text>Inscription does not exist</Text>
+          <Text>{strings.inscriptionDoesNotExist}</Text>
         </Center>
       )}
       {nft && <Explorer nft={nft} />}

@@ -3,6 +3,7 @@ import { Text, Group, Button, rem, useMantineTheme } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { IconCloudUpload, IconX, IconDownload } from '@tabler/icons-react';
 import classes from './DropzoneButton.module.css';
+import strings from '@/localization';
 
 export function DropzoneButton({ onDrop, mimeTypes, name, children }: { onDrop: (files: File[]) => void, mimeTypes: string[], name: string, children?: ReactNode }) {
   const theme = useMantineTheme();
@@ -40,16 +41,15 @@ export function DropzoneButton({ onDrop, mimeTypes, name, children }: { onDrop: 
           </Group>
           {children}
           <Text ta="center" fw={700} fz="lg" mt="xl">
-            <Dropzone.Accept>Drop files here</Dropzone.Accept>
-            <Dropzone.Reject>File less than 30mb</Dropzone.Reject>
-            <Dropzone.Idle>Upload {name}</Dropzone.Idle>
+            <Dropzone.Accept>{strings.dropFilesHere}</Dropzone.Accept>
+            <Dropzone.Reject>{strings.fileLessThan30mb}</Dropzone.Reject>
+            <Dropzone.Idle>{strings.formatString(strings.uploadFileProgress, name)}</Dropzone.Idle>
           </Text>
           <Text ta="center" fz="sm" mt="xs" c="dimmed">
-            Drag and drop {name} files here to upload. We can accept only {name} files that
-            are less than 30mb in size.
+            {strings.formatString(strings.dropAndDropFilesHere, name)}
           </Text>
           <Button className={classes.control} mt="md" size="md" radius="xl" onClick={() => openRef.current?.()}>
-            Select files
+            {strings.selectFiles}
           </Button>
         </div>
       </Dropzone>

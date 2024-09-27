@@ -7,6 +7,7 @@ import { ConfigureInscribe, InscriptionSettings } from './ConfigureInscribe';
 import { DoInscribe } from './DoInscribe';
 import { AssetWithInscription } from './types';
 import { NftCard } from './NftCard';
+import strings from '@/localization';
 
 export function InscribeNft() {
   const [active, setActive] = useState(0);
@@ -33,8 +34,8 @@ export function InscribeNft() {
     <Box mt="xl">
       <Stepper active={active} onStepClick={setActive}>
         <Stepper.Step
-          label="Select NFTs"
-          description="Inscribe NFTs you've created"
+          label={strings.selectNftsLabel}
+          description={strings.inscribeNftsYouVeCreated}
           allowStepSelect={shouldAllowSelectStep(0)}
         >
           <NftSelector
@@ -46,8 +47,8 @@ export function InscribeNft() {
           />
         </Stepper.Step>
         <Stepper.Step
-          label="Configure"
-          description="Choose on-chain data format"
+          label={strings.configureLabel}
+          description={strings.chooseOnChainDataFormat}
           allowStepSelect={shouldAllowSelectStep(1)}
         >
           <ConfigureInscribe
@@ -59,8 +60,8 @@ export function InscribeNft() {
           />
         </Stepper.Step>
         <Stepper.Step
-          label="Inscribe"
-          description="Do it"
+          label={strings.inscribeLabel}
+          description={strings.doIt}
           allowStepSelect={shouldAllowSelectStep(2)}
         >
           <DoInscribe
@@ -76,7 +77,7 @@ export function InscribeNft() {
           <Paper mt="lg" p="lg">
             <Center>
               <Stack align="center">
-                <Title>Congratulations! You have inscribed your NFTs.</Title>
+                <Title>{strings.congratsYouVeInscribedYourNfts}</Title>
                 <Grid my="lg" w="100%" justify="center" gutter="lg">
                   {selectedNfts.map((nft) => (
                     <Grid.Col span={4}>
@@ -94,14 +95,14 @@ export function InscribeNft() {
                     setTxs(undefined);
                   }}
                 >
-                  Inscribe more
+                    {strings.inscribeMoreButton}
                 </Button>
               </Stack>
             </Center>
             <CodeHighlightTabs
               withExpandButton
-              expandCodeLabel="Show all transactions"
-              collapseCodeLabel="Show less"
+              expandCodeLabel={strings.expandTransactionsLabel}
+              collapseCodeLabel={strings.collapseTransactionsLabel}
               defaultExpanded={false}
               // withHeader={false}
               mt="md"

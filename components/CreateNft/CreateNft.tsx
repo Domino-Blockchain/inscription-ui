@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useUmi } from '@/providers/useUmi';
 import { sha256 } from '@/lib/sha256';
+import strings from '@/localization';
 
 async function uploadFile(file: File): Promise<string> {
   const formData = new FormData();
@@ -27,7 +28,7 @@ export function CreateNft() {
   const router = useRouter();
 
   const [name, setName] = useState('TestNFT');
-  const [description, setDescription] = useState('This is a test NFT');
+  const [description, setDescription] = useState(strings.thisIsATestNFT);
   const [symbol, setSymbol] = useState('TEST');
   const [files, setFiles] = useState<File[]>([]);
 
@@ -76,8 +77,8 @@ export function CreateNft() {
     },
     onSuccess: () =>
       notifications.show({
-        title: 'Success',
-        message: 'Your NFT has been created',
+        title: strings.successNotificationTitle,
+        message: strings.yourNFTHasBeenCreated,
         color: 'green',
       }),
     onError: (error) => console.error(error),
@@ -85,20 +86,20 @@ export function CreateNft() {
 
   return (
     <Stack my="lg" gap="sm">
-      <Input.Wrapper label="Name" required>
+      <Input.Wrapper label={strings.nameLabel} required>
         <Input value={name} onChange={(event) => setName(event.currentTarget.value)} />
       </Input.Wrapper>
-      <Input.Wrapper label="Description">
+      <Input.Wrapper label={strings.descriptionLabel}>
         <Input
           value={description}
           onChange={(event) => setDescription(event.currentTarget.value)}
         />
       </Input.Wrapper>
-      <Input.Wrapper label="Symbol" required>
+      <Input.Wrapper label={strings.symbolLabel} required>
         <Input value={symbol} onChange={(event) => setSymbol(event.currentTarget.value)} />
       </Input.Wrapper>
       <FileInput
-        label="Image Files"
+        label={strings.imageFilesLabel}
         required
         type="button"
         multiple
@@ -107,7 +108,7 @@ export function CreateNft() {
       />
       <Group justify="flex-end" mt="md">
         <Button onClick={mutate as never} loading={isPending}>
-          Create NFT
+          {strings.createNFTButton}
         </Button>
       </Group>
     </Stack>

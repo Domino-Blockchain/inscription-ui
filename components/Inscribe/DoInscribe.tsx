@@ -38,6 +38,7 @@ import {
   sendTxsWithRetries,
 } from '@/lib/tx';
 import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
+import strings from '@/localization';
 
 const sizeOf = require('browser-image-size');
 
@@ -318,7 +319,7 @@ export function DoInscribe({
       } catch (e: any) {
         console.log(e);
         notifications.show({
-          title: 'Error inscribing',
+          title: strings.errorInscribingNotificationTitle,
           message: e.message,
           color: 'red',
         });
@@ -334,7 +335,7 @@ export function DoInscribe({
     <>
       <Container size="sm" mt="lg">
         <Paper p="xl" radius="md">
-          <Title order={2}>Summary</Title>
+          <Title order={2}>{strings.summaryTitle}</Title>
           {!summary ? (
             <Center h="20vh">
               <Loader />
@@ -342,25 +343,28 @@ export function DoInscribe({
           ) : (
             <Stack mt="md">
               <Text>
-                Number of NFTs to inscribe: <b>{summary.calculated.length}</b>
+                {strings.formatString(
+                  strings.numberOfNftsToInscribe,
+                  <b>{summary.calculated.length}</b>
+                )}
               </Text>
               <Text>
-                Total Domichain rent cost:{' '}
+                {strings.totalDomichainRentCost}{' '}
                 <b>~{(summary.totalSize * 0.00000696).toFixed(4)} DOMI</b>
               </Text>
               <Center>
                 <Button size="lg" onClick={() => handleInscribe()}>
-                  Inscribe!
+                  {strings.inscribeExclamationButton}
                 </Button>
               </Center>
               {showRetry && (
                 <Center mt="lg" ta="center">
                   <Stack>
                     <Button onClick={() => handleInscribe(true)} variant="default">
-                      Retry inscribe data only
+                      {strings.retryInscribeDataOnly}
                     </Button>
                     <Text size="sm">
-                      Inscribing data only assumes the initialization step was successful
+                      {strings.inscribingDataOnlyAssumes}
                     </Text>
                   </Stack>
                 </Center>
@@ -372,8 +376,8 @@ export function DoInscribe({
       <Modal opened={opened} onClose={() => {}} centered withCloseButton={false}>
         <Center my="xl">
           <Stack gap="md" align="center">
-            <Title order={3}>Inscribing...</Title>
-            <Text>Be prepared to approve many transactions...</Text>
+            <Title order={3}>{strings.inscribingProgress}</Title>
+            <Text>{strings.bePreparedToApproveManyTransactions}</Text>
             <Center w="100%">
               {summary && (
                 <Stack w="100%">

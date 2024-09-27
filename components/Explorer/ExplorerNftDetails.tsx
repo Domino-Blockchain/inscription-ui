@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNftJson } from '../Inscribe/hooks';
 import { ExplorerStat } from './ExplorerStat';
 import classes from './ExplorerNftDetails.module.css';
+import strings from '@/localization';
 
 export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
   const jsonInfo = useNftJson(nft);
@@ -30,7 +31,7 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
   return (
     <Stack>
       <Text fz="md" tt="uppercase" fw={700} c="dimmed">
-        NFT Details
+          {strings.nftDetailsTitle}
       </Text>
       {jsonInfo.isPending || jsonInfo.isError ? (
         <Center h="20vh">
@@ -45,7 +46,7 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
               <Loader color="gray" size="xs" />
             ) : (
               <Badge variant="light" color={isVerified ? 'green' : 'red'} radius="md">
-                {isVerified ? 'Verified' : 'Tampered'}
+                {isVerified ? strings.verified : strings.tampered}
               </Badge>
             )}
           </Flex>
@@ -72,17 +73,17 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
           </Paper>
 
           {jsonInfo.data.description && (
-            <ExplorerStat label="Description" value={jsonInfo.data.description} />
+            <ExplorerStat label={strings.descriptionLabel} value={jsonInfo.data.description} />
           )}
-          <ExplorerStat label="Mint" value={nft.mint.publicKey} copyable />
+          <ExplorerStat label={strings.mintLabel} value={nft.mint.publicKey} copyable />
 
           <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-            JSON Metadata
+              {strings.jsonMetadataTitle}
           </Text>
           <CodeHighlightTabs
             withExpandButton
-            expandCodeLabel="Show full JSON"
-            collapseCodeLabel="Show less"
+            expandCodeLabel={strings.expandCodeLabel}
+            collapseCodeLabel={strings.collapseCodeLabel}
             defaultExpanded={false}
             mb="lg"
             code={[
