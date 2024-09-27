@@ -139,6 +139,10 @@ const chineseTraditional = {
     deletingInscriptionTitle: '刪除銘文',
     domichainRentWillBeReturned: 'Domichain 租金將返還到您的錢包中。',
     inscriptionsYouCanManageTitle: '您可以管理的銘文',
+    errorNotificationTitle: '錯誤',
+    youCantMintMoreThanLimitBrc20Tokens: '您一次鑄造的 BRC-20 代幣不能超過 {0} 個',
+    verified: '已驗證',
+    tampered: '被竄改',
 };
 
 export default chineseTraditional;

@@ -139,6 +139,10 @@ const english = {
   deletingInscriptionTitle: 'Deleting Inscription',
   domichainRentWillBeReturned: 'The Domichain rent will be returned to your wallet.',
   inscriptionsYouCanManageTitle: 'Inscriptions you can manage',
+  errorNotificationTitle: 'Error',
+  youCantMintMoreThanLimitBrc20Tokens: 'You can\'t mint more than {0} BRC-20 tokens at once',
+  verified: 'Verified',
+  tampered: 'Tampered',
 };
 
 export default english;

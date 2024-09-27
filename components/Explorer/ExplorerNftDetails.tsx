@@ -46,7 +46,7 @@ export function ExplorerNftDetails({ nft }: { nft: DigitalAsset }) {
               <Loader color="gray" size="xs" />
             ) : (
               <Badge variant="light" color={isVerified ? 'green' : 'red'} radius="md">
-                {isVerified ? 'Verified' : 'Tampered'}
+                {isVerified ? strings.verified : strings.tampered}
               </Badge>
             )}
           </Flex>

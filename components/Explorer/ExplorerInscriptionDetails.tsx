@@ -67,8 +67,8 @@ export function ExplorerInscriptionDetails({ nft }: { nft: DigitalAsset }) {
 
       if (amount > limit) {
         notifications.show({
-          title: 'Error',
-          message: `You can't mint more than ${limit} BRC-20 tokens at once`,
+          title: strings.errorNotificationTitle,
+          message: strings.formatString(strings.youCantMintMoreThanLimitBrc20Tokens, limit),
           color: 'red',
         });
         return;
