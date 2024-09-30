@@ -25,7 +25,19 @@ export function Providers({ children }: { children: ReactNode }) {
   const [env, setEnv] = useState<Env>(
     queryEnv === 'mainnet-beta' || queryEnv === 'devnet' ? queryEnv : 'mainnet-beta'
   );
-  const [language, setLanguage] = useState<string>(() => strings.getLanguage());
+  const [language, setLanguage] = useState<string>(() => {
+    let lang = window.localStorage.getItem('lang');
+    // console.log('Found saved language', lang);
+
+    if (lang) {
+      strings.setLanguage(lang);
+    } else {
+      lang = strings.getLanguage();
+      // console.log('Found default language', lang);
+      window.localStorage.setItem('lang', lang);
+    }
+    return lang;
+  });
   const wallets = useMemo(
     () => [
       new DWalletExtensionWalletAdapter(),
@@ -43,9 +55,11 @@ export function Providers({ children }: { children: ReactNode }) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const doSetLanguage = (lang: string) => {
-    strings.setLanguage(lang);
-    setLanguage(lang);
+  const doSetLanguage = (newLang: string) => {
+    if (!newLang) return;
+    window.localStorage.setItem('lang', newLang);
+    strings.setLanguage(newLang);
+    setLanguage(newLang);
   };
 
   const endpoint = useMemo(() => {

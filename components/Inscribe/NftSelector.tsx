@@ -288,7 +288,7 @@ export function NftSelector({
             );
           }}
         >
-          Next
+          {strings.nextButton}
         </Button>
       </Group>
       {isPending ? (
