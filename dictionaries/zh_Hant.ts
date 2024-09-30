@@ -143,6 +143,10 @@ const chineseTraditional = {
     youCantMintMoreThanLimitBrc20Tokens: '您一次鑄造的 BRC-20 代幣不能超過 {0} 個',
     verified: '已驗證',
     tampered: '文件曾經修改過',
+    imageTypeRaw: '生的',
+    imageTypeCompressed: '壓縮的',
+    imageTypeJsonOnly: '僅 JSON',
+    imageTypeNewImage: '新形象',
 };
 
 export default chineseTraditional;

@@ -1,4 +1,3 @@
-import { DasApiAsset } from '@metaplex-foundation/digital-asset-standard-api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { UseFormReturnType, useForm } from '@mantine/form';
 import {
@@ -28,13 +27,13 @@ import Compressor from 'compressorjs';
 import { notifications } from '@mantine/notifications';
 import { IconArrowDown, IconBraces, IconPhoto } from '@tabler/icons-react';
 import { MIME_TYPES } from '@mantine/dropzone';
-import { useNftJsonWithImage } from './hooks';
+import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 
+import { useNftJsonWithImage } from './hooks';
 import classes from './ConfigureInscribe.module.css';
 // import { getCollection } from './NftSelector';
 import { DropzoneButton } from '../Dropzone/DropzoneButton';
 import { UNCATAGORIZED } from '@/components/Inscribe/NftSelector';
-import { DigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 import strings from '@/localization';
 
 interface Settings {
@@ -456,12 +455,12 @@ function Row({
             <Stack>
               <Text size="lg">
                 {imageType === 'Raw'
-                  ? 'Raw'
+                  ? strings.imageTypeRaw
                   : imageType === 'Compress'
-                    ? 'Compressed'
+                    ? strings.imageTypeCompressed
                     : imageType === 'None'
-                      ? 'JSON only'
-                      : 'New image'}
+                      ? strings.imageTypeJsonOnly
+                      : strings.imageTypeNewImage}
               </Text>
               {previewInfo?.image && imageType === 'Compress' && (
                 <Image

@@ -6,6 +6,7 @@ import { Env } from '@/providers/useEnv';
 import RetainQueryLink from '../RetainQueryLink';
 import classes from './Header.module.css';
 import strings from '@/localization';
+import { LanguageMenu } from './LanguageMenu';
 
 const HeaderLink = ({
   label,
@@ -24,7 +25,13 @@ const HeaderLink = ({
   );
 };
 
-export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => void }) {
+export interface HeaderProps {
+  env: string;
+  setEnv: (env: Env) => void;
+  setLanguage: (lang: string) => void;
+}
+
+export function Header({ env, setEnv, setLanguage }: HeaderProps) {
   // const pathname = usePathname();
   // const { count } = useInscriptionCounter();
 
@@ -67,6 +74,7 @@ export function Header({ env, setEnv }: { env: string; setEnv: (env: Env) => voi
               <Menu.Item onClick={() => setEnv('devnet')}>{strings.devnetNetwork}</Menu.Item>
             </Menu.Dropdown>
           </Menu>
+          <LanguageMenu setLanguage={setLanguage} />
         </Group>
       </div>
     </Container>

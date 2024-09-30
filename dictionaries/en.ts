@@ -143,6 +143,10 @@ const english = {
   youCantMintMoreThanLimitBrc20Tokens: 'You can\'t mint more than {0} BRC-20 tokens at once',
   verified: 'Verified',
   tampered: 'Tampered',
+  imageTypeRaw: 'Raw',
+  imageTypeCompressed: 'Compressed',
+  imageTypeJsonOnly: 'JSON only',
+  imageTypeNewImage: 'New image',
 };
 
 export default english;
