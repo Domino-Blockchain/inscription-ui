@@ -14,6 +14,7 @@ import { useUmi } from '@/providers/useUmi';
 import { publicKey } from '@metaplex-foundation/umi';
 import { fetchAllDigitalAsset } from '@metaplex-foundation/mpl-token-metadata';
 import { InscriptionInfo } from '@/components/Inscribe/types';
+import strings from '@/localization';
 
 export function ExplorerRecent() {
   const env = useEnv();
@@ -102,18 +103,18 @@ export function ExplorerRecent() {
 
   return (
     <>
-      <Title mb="lg">Recent Inscriptions</Title>
+      <Title mb="lg">{strings.recentInscriptionsTitle}</Title>
       {isPending ? (
         <Center h="20vh">
           <Loader />
         </Center>
       ) : error ? (
         <Center h="20vh" ta="center">
-          <Text>Unable to fetch recent Inscriptions.</Text>
+          <Text>{strings.unableToFetchRecentInscriptions}</Text>
         </Center>
       ) : nfts?.length === 0 ? (
         <Center h="20vh" ta="center">
-          <Text>No recent Inscriptions yet.</Text>
+          <Text>{strings.noRecentInscriptionsYet}</Text>
         </Center>
       ) : (
         <SimpleGrid

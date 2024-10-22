@@ -17074,6 +17074,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"localized-strings@npm:^0.2.0":
+  version: 0.2.4
+  resolution: "localized-strings@npm:0.2.4"
+  checksum: d8241462af34b43eb2886e30836f797272e1c39777f7b9261217c095f8324f0b2668a1dcd478377f3a15e9c433c88dfebe89821b74c9db3a115b4c899a7e180a
+  languageName: node
+  linkType: hard
+
 "locate-path@npm:^3.0.0":
   version: 3.0.0
   resolution: "locate-path@npm:3.0.0"
@@ -17413,6 +17420,7 @@ __metadata:
     pretty-bytes: "npm:^6.1.1"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
+    react-localization: "npm:^1.0.19"
     sharp: "npm:^0.33.2"
     storybook: "npm:^7.5.2"
     storybook-dark-mode: "npm:^3.0.1"
@@ -20193,6 +20201,17 @@ __metadata:
   version: 3.0.4
   resolution: "react-lifecycles-compat@npm:3.0.4"
   checksum: 1d0df3c85af79df720524780f00c064d53a9dd1899d785eddb7264b378026979acbddb58a4b7e06e7d0d12aa1494fd5754562ee55d32907b15601068dae82c27
+  languageName: node
+  linkType: hard
+
+"react-localization@npm:^1.0.19":
+  version: 1.0.19
+  resolution: "react-localization@npm:1.0.19"
+  dependencies:
+    localized-strings: "npm:^0.2.0"
+  peerDependencies:
+    react: ^18.0.0 || ^17.0.0 || ^16.0.0 || ^15.6.0
+  checksum: db675ac71eb9989f8a3c8c677dc8fa6b356214948023fa0acc1db34052e63fab6e65def7a0dd06cc36183bb33f9b947b3c6df4f13f88f984dd3a7c8a377b3bb4
   languageName: node
   linkType: hard
 

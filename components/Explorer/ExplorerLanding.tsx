@@ -11,6 +11,7 @@ import { useUmi } from '@/providers/useUmi';
 import { useEnv } from '@/providers/useEnv';
 import { InscriptionInfo } from '../Inscribe/types';
 import { ExplorerNftCard } from './ExplorerNftCard';
+import strings from '@/localization';
 
 export function ExplorerLanding() {
   const umi = useUmi();
@@ -89,14 +90,14 @@ export function ExplorerLanding() {
 
   return (
     <Box mt="xl">
-      <Title mb="lg">Your Inscriptions</Title>
+      <Title mb="lg">{strings.yourInscriptionsTitle}</Title>
       {isPending ? (
         <Center h="20vh">
           <Loader />
         </Center>
       ) : error ? (
         <Center h="20vh" ta="center">
-          <Text>There was an error fetching your Inscriptions.</Text>
+          <Text>{strings.errorFetchingInscriptions}</Text>
         </Center>
       ) : nfts?.length ? (
         <SimpleGrid
@@ -111,7 +112,7 @@ export function ExplorerLanding() {
         </SimpleGrid>
       ) : (
         <Center h="20vh" ta="center">
-          <Text>You don&apos;t have any Inscriptions.</Text>
+          <Text>{strings.youDontHaveAnyInscriptions}</Text>
         </Center>
       )}
     </Box>

@@ -13,6 +13,8 @@ import { Header } from '@/components/Header/Header';
 import { UmiProvider } from './UmiProvider';
 import { EnvProvider } from './EnvProvider';
 import { Env } from './useEnv';
+import { LanguageProvider } from './LanguageProvider';
+import strings from '@/localization';
 
 export function Providers({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -23,6 +25,19 @@ export function Providers({ children }: { children: ReactNode }) {
   const [env, setEnv] = useState<Env>(
     queryEnv === 'mainnet-beta' || queryEnv === 'devnet' ? queryEnv : 'mainnet-beta'
   );
+  const [language, setLanguage] = useState<string>(() => {
+    let lang = window.localStorage.getItem('lang');
+    // console.log('Found saved language', lang);
+
+    if (lang) {
+      strings.setLanguage(lang);
+    } else {
+      lang = strings.getLanguage();
+      // console.log('Found default language', lang);
+      window.localStorage.setItem('lang', lang);
+    }
+    return lang;
+  });
   const wallets = useMemo(
     () => [
       new DWalletExtensionWalletAdapter(),
@@ -40,6 +55,13 @@ export function Providers({ children }: { children: ReactNode }) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  const doSetLanguage = (newLang: string) => {
+    if (!newLang) return;
+    window.localStorage.setItem('lang', newLang);
+    strings.setLanguage(newLang);
+    setLanguage(newLang);
+  };
+
   const endpoint = useMemo(() => {
     switch (env) {
       case 'mainnet-beta':
@@ -52,30 +74,32 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <EnvProvider env={env!}>
-      <ConnectionProvider endpoint={endpoint!}>
-        <WalletProvider wallets={wallets} autoConnect>
-          <WalletModalProvider>
-            <UmiProvider>
-              <QueryClientProvider client={client}>
-                <ReactQueryStreamedHydration>
-                  <Notifications />
-                  <AppShell
-                    header={{ height: 80 }}
-                    style={{
-                      backgroundColor: '#1a1a1a',
-                    }}
-                  >
-                    <AppShell.Header>
-                      <Header env={env} setEnv={doSetEnv} />
-                    </AppShell.Header>
-                    <AppShell.Main>{children}</AppShell.Main>
-                  </AppShell>
-                </ReactQueryStreamedHydration>
-              </QueryClientProvider>
-            </UmiProvider>
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
+      <LanguageProvider language={language!}>
+        <ConnectionProvider endpoint={endpoint!}>
+          <WalletProvider wallets={wallets} autoConnect>
+            <WalletModalProvider>
+              <UmiProvider>
+                <QueryClientProvider client={client}>
+                  <ReactQueryStreamedHydration>
+                    <Notifications />
+                    <AppShell
+                      header={{ height: 80 }}
+                      style={{
+                        backgroundColor: '#1a1a1a',
+                      }}
+                    >
+                      <AppShell.Header>
+                        <Header env={env} setEnv={doSetEnv} setLanguage={doSetLanguage} />
+                      </AppShell.Header>
+                      <AppShell.Main>{children}</AppShell.Main>
+                    </AppShell>
+                  </ReactQueryStreamedHydration>
+                </QueryClientProvider>
+              </UmiProvider>
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </LanguageProvider>
     </EnvProvider>
   );
 }

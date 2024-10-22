@@ -17,6 +17,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Pda, PublicKey } from '@metaplex-foundation/umi';
 import { useNftInscription } from '../Inscribe/hooks';
 import { useUmi } from '@/providers/useUmi';
+import strings from '@/localization';
 
 export function ManageDanger({ nft }: { nft: DasApiAsset }) {
   const inscriptionInfo = useNftInscription(nft, {
@@ -46,14 +47,14 @@ export function ManageDanger({ nft }: { nft: DasApiAsset }) {
           associatedTag,
         }).sendAndConfirm(umi);
         notifications.show({
-          title: 'Inscription deleted',
-          message: 'Inscription deleted successfully',
+          title: strings.inscriptionDeletedNotificationTitle,
+          message: strings.inscriptionDeletedSuccessfully,
           color: 'green',
         });
         inscriptionInfo.refetch();
       } catch (e: any) {
         notifications.show({
-          title: 'Inscription deleted failed',
+          title: strings.inscriptionDeletedFailedNotificationTitle,
           message: e.message,
           color: 'red',
         });
@@ -82,7 +83,7 @@ export function ManageDanger({ nft }: { nft: DasApiAsset }) {
                 })
               }
             >
-              Delete Image Inscription
+              {strings.deleteImageInscriptionButton}
             </Button>
             <Button
               color="red"
@@ -93,7 +94,7 @@ export function ManageDanger({ nft }: { nft: DasApiAsset }) {
                 })
               }
             >
-              Delete Inscription
+              {strings.deleteInscriptionButton}
             </Button>
           </Stack>
         </Container>
@@ -101,8 +102,8 @@ export function ManageDanger({ nft }: { nft: DasApiAsset }) {
       <Modal opened={opened} onClose={() => {}} centered withCloseButton={false}>
         <Center my="xl">
           <Stack gap="md" align="center">
-            <Title order={3}>Deleting Inscription</Title>
-            <Text>The Domichain rent will be returned to your wallet.</Text>
+            <Title order={3}>{strings.deletingInscriptionTitle}</Title>
+            <Text>{strings.domichainRentWillBeReturned}</Text>
             <Center w="100%">
               <Stack w="100%">
                 <Progress value={0} animated />

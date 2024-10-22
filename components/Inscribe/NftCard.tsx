@@ -3,6 +3,7 @@ import { IconExternalLink } from '@tabler/icons-react';
 import { AssetWithInscription } from './types';
 import { useEnv } from '@/providers/useEnv';
 import { useNftJson } from '@/components/Inscribe/hooks';
+import strings from '@/localization';
 
 export function NftCard({
   nft,
@@ -35,7 +36,7 @@ export function NftCard({
               rel="noopener noreferrer"
             >
               <Group justify="space-between">
-                <Text>Inscription JSON</Text>
+                <Text>{strings.inscriptionJson}</Text>
                 <IconExternalLink />
               </Group>
             </Anchor>
@@ -45,7 +46,7 @@ export function NftCard({
               rel="noopener noreferrer"
             >
               <Group justify="space-between">
-                <Text>Inscription Image</Text>
+                <Text>{strings.inscriptionImage}</Text>
                 <IconExternalLink />
               </Group>
             </Anchor>
@@ -61,7 +62,7 @@ export function NftCard({
             right: '0.5rem',
           }}
         >
-          Inscribed
+          {strings.inscribed}
         </Badge>
       )}
       {nft?.imagePdaExists && (
@@ -73,7 +74,7 @@ export function NftCard({
             right: '0.5rem',
           }}
         >
-          Image Inscribed
+          {strings.imageInscribed}
         </Badge>
       )}
       {isSelected && (

@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Manage } from '@/components/Manage/Manage';
 import { useUmi } from '@/providers/useUmi';
 import { useEnv } from '@/providers/useEnv';
+import strings from '@/localization';
 
 export default function ManagePage({ params }: { params: { mint: string } }) {
   const env = useEnv();
@@ -26,7 +27,7 @@ export default function ManagePage({ params }: { params: { mint: string } }) {
       }
       {error &&
         <Center h="20vh">
-          <Text>NFT does not exist</Text>
+          <Text>{strings.nftDoesNotExist}</Text>
         </Center>}
       {nft && <Manage nft={nft} />}
     </Container>);

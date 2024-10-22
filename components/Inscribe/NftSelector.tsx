@@ -31,6 +31,7 @@ import { NftCollectionCard } from './NftCollectionCard';
 import { NftCard } from './NftCard';
 import classes from './NftSelector.module.css';
 import { AssetWithInscription, InscriptionInfo } from './types';
+import strings from '@/localization';
 
 export const UNCATAGORIZED = 'Uncategorized';
 
@@ -131,7 +132,7 @@ export function NftSelector({
   useEffect(() => {
     if (error) {
       notifications.show({
-        title: 'Error fetching NFTs',
+        title: strings.errorFetchingNftsNotificationTitle,
         message: error.message,
         color: 'red',
       });
@@ -224,7 +225,7 @@ export function NftSelector({
       <Group my="lg" justify="space-between">
         <Group>
           <Checkbox
-            label="Hide inscribed"
+            label={strings.hideInscribedLabel}
             checked={hideInscribed}
             disabled={isPending}
             onChange={() => {
@@ -240,7 +241,7 @@ export function NftSelector({
             }}
           /> */}
           <Checkbox
-            label="Select All"
+            label={strings.selectAllCheckboxLabel}
             checked={selectAll}
             disabled={isPending}
             onChange={() => {
@@ -271,7 +272,7 @@ export function NftSelector({
             }}
           />
           <Checkbox
-            label="Show only owned"
+            label={strings.showOnlyOwnedCheckboxLabel}
             checked={showOnlyOwned}
             disabled={isPending}
             onChange={() => {
@@ -287,7 +288,7 @@ export function NftSelector({
             );
           }}
         >
-          Next
+          {strings.nextButton}
         </Button>
       </Group>
       {isPending ? (
@@ -300,8 +301,10 @@ export function NftSelector({
             <Paper mt="xl">
               <Center h="20vh">
                 <Text w="50%" ta="center">
-                  Unable to find any NFTs created by this wallet. Only the <b>Update Authority</b>{' '}
-                  of an NFT is authorized to Inscribe.
+                  {strings.formatString(
+                    strings.noticeUnableToFindNftCreated,
+                    <b>{strings.updateAuthority}</b>
+                  )}
                 </Text>
               </Center>
             </Paper>
@@ -310,8 +313,10 @@ export function NftSelector({
             <Paper mt="xl">
               <Center h="20vh">
                 <Text w="50%" ta="center">
-                  Create your own NFT <Anchor href="/create-nft">here</Anchor>. Return here once
-                  your collection has minted NFTs to inscribe them.
+                  {strings.formatString(
+                    strings.createYourOwnNftHere,
+                    <Anchor href="/create-nft">{strings.here}</Anchor>
+                  )}
                 </Text>
               </Center>
             </Paper>
